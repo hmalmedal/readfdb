@@ -113,3 +113,22 @@ parse_ukesvariasjon <- function(df) {
   names(df)[1] <- "\u00c5r" # År
   df
 }
+
+parse_aarsvariasjon <- function(df) {
+  df <- df %>%
+    dplyr::filter_(~index != "Total") %>%
+    dplyr::rename_(Maaned = ~index) %>%
+    dplyr::mutate_(Aar = ~index_name %>%
+                     as.integer(),
+                   Maaned = ~factor(Maaned, maaneder),
+                   Dato = ~stringr::str_c(Aar, "-", as.integer(Maaned),
+                                         "-01") %>% as.Date()) %>%
+    dplyr::select_(~-index_name, ~-meta, ~-type, ~-subtype) %>%
+    dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
+    tidyr::spread_("key", "value") %>%
+    dplyr::arrange_(~Dato)
+
+  names(df)[1] <- "\u00c5r" # År
+  names(df)[2] <- "M\u00e5ned" # Måned
+  df
+}

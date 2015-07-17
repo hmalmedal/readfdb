@@ -1,0 +1,15 @@
+Package: readfdb
+Title: Read 'FDB' Files
+Version: 0.1.0
+Authors@R: person("Håkon", "Malmedal", email = "hmalmedal@gmail.com", role = c("aut", "cre"))
+Description: Read files from 'Ferjedatabanken'.
+License: GPL (>= 3)
+Encoding: UTF-8
+Imports: checkmate,
+    dplyr,
+    ISOweek,
+    lubridate,
+    readr,
+    stringr,
+    tidyr
+Suggests: testthat

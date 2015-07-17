@@ -19,6 +19,8 @@ read_fdb_csv <- function(file) {
 
   if (df$subtype[1] == "D\u00f8gnvariasjon") {
     df <- parse_dognvariasjon(df)
+  } else if (df$subtype[1] == "Ukesvariasjon") {
+    df <- parse_ukesvariasjon(df)
   } else {
     warning("Unimplemented file type. Returning unparsed data frame.")
   }

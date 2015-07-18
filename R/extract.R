@@ -2,6 +2,10 @@ extract_meta_dots <- function(meta) {
   checkmate::assertCharacter(meta, min.len = 17, max.len = 19)
 
   colon_pos <- which(stringr::str_detect(meta, ":$"))
+  if (min(colon_pos) == 2) {
+    meta <- c(meta[1], NA, meta[-1])
+    colon_pos <- colon_pos + 1L
+  }
   checkmate::assertInteger(colon_pos, lower = 3, upper = length(meta) - 1,
                            min.len = 7, max.len = 8)
 

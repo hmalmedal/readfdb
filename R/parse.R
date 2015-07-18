@@ -36,19 +36,21 @@ parse_meta <- function(csv_page, meta_length) {
 }
 
 parse_dognvariasjon <- function(df) {
+  checkmate::assertDataFrame(df, ncols = 15)
+
   df <- df %>%
     dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Dag = ~key, Kl = ~index) %>%
-    dplyr::mutate_(Aar = ~meta %>%
+    dplyr::mutate_(Aar = ~meta19 %>%
                      stringr::str_extract("\\d{4}$") %>%
                      as.integer(),
                    Uke = ~index_name %>%
                      stringr::str_extract("\\d{1,2}$") %>%
                      as.integer(),
                    Kl = ~factor(Kl),
-                   key = ~meta %>%
+                   key = ~meta19 %>%
                      stringr::str_replace("\\s*\\d{4}$", "")) %>%
-    dplyr::select_(~-index_name, ~-meta, ~-type, ~-subtype) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Aar, ~Uke, ~Dag, ~Kl, ~everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
@@ -76,6 +78,8 @@ parse_dognvariasjon <- function(df) {
 }
 
 parse_ukesvariasjon <- function(df) {
+  checkmate::assertDataFrame(df, ncols = 15)
+
   df <- df %>%
     dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Dag = ~index) %>%
@@ -86,7 +90,7 @@ parse_ukesvariasjon <- function(df) {
                      stringr::str_extract("\\d{1,2}$") %>%
                      as.integer(),
                    Dag = ~factor(Dag, ukedager)) %>%
-    dplyr::select_(~-index_name, ~-meta, ~-type, ~-subtype) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Aar, ~Uke, ~Dag, ~everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
@@ -113,6 +117,8 @@ parse_ukesvariasjon <- function(df) {
 }
 
 parse_aarsvariasjon <- function(df) {
+  checkmate::assertDataFrame(df, ncols = 15)
+
   df <- df %>%
     dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Maaned = ~index) %>%
@@ -121,7 +127,7 @@ parse_aarsvariasjon <- function(df) {
                    Maaned = ~factor(Maaned, maaneder),
                    Dato = ~stringr::str_c(Aar, "-", as.integer(Maaned),
                                          "-01") %>% as.Date()) %>%
-    dplyr::select_(~-index_name, ~-meta, ~-type, ~-subtype) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Dato)

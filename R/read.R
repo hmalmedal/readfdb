@@ -17,7 +17,7 @@ read_fdb_csv <- function(file) {
   df <- lapply(csv_pages, parse_csv_page) %>%
     dplyr::bind_rows()
 
-  checkmate::assertDataFrame(df, ncols = 15)
+  checkmate::assertDataFrame(df, min.cols = 14)
 
   if (df$subtype[1] == "D\u00f8gnvariasjon") {
     df <- parse_dognvariasjon(df)

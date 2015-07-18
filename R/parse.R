@@ -4,7 +4,6 @@ parse_csv_page <- function(csv_page) {
   csv_str <- stringr::str_c(csv_page, collapse = "\n")
 
   meta <- parse_meta(csv_page, meta_length)
-  checkmate::assertCharacter(meta, len = 19)
   meta_dots <- extract_meta_dots(meta)
 
   col_names <- readr::read_csv(csv_str, skip = meta_length, n_max = 0) %>%
@@ -22,8 +21,7 @@ parse_csv_page <- function(csv_page) {
   df <- readr::read_csv(csv_str, col_names = col_names, col_types = col_types,
                         skip = meta_length + 1) %>%
     tidyr::gather_("key", "value", col_names[-1]) %>%
-    dplyr::mutate_(~index_name, .dots = meta_dots) %>%
-    dplyr::mutate_(meta = ~meta[19])
+    dplyr::mutate_(~index_name, .dots = meta_dots)
   df
 }
 

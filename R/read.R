@@ -19,12 +19,19 @@ read_fdb_csv <- function(file) {
 
   checkmate::assertDataFrame(df, min.cols = 14)
 
-  if (df$subtype[1] == "D\u00f8gnvariasjon") {
-    df <- parse_dognvariasjon(df)
-  } else if (df$subtype[1] == "Ukesvariasjon") {
-    df <- parse_ukesvariasjon(df)
-  } else if (df$subtype[1] == "\u00c5rsvariasjon") {
-    df <- parse_aarsvariasjon(df)
+  type <- unique(df$type)
+  subtype <- unique(df$subtype)
+
+  if (identical(type, "Variasjonskurver")) {
+    if (identical(subtype, "D\u00f8gnvariasjon")) {
+      df <- parse_dognvariasjon(df)
+    } else if (identical(subtype, "Ukesvariasjon")) {
+      df <- parse_ukesvariasjon(df)
+    } else if (identical(subtype, "\u00c5rsvariasjon")) {
+      df <- parse_aarsvariasjon(df)
+    } else {
+      stop("Unknown error.")
+    }
   } else {
     warning("Unimplemented file type. Returning unparsed data frame.")
   }

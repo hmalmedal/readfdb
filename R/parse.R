@@ -19,7 +19,7 @@ parse_csv_page <- function(csv_page) {
   col_types <- stringr::str_c(col_types, collapse = "")
 
   df <- readr::read_csv(csv_str, col_names = col_names, col_types = col_types,
-                        skip = meta_length + 1) %>%
+                        na = "?", skip = meta_length + 1) %>%
     tidyr::gather_("key", "value", col_names[-1]) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots)
   df

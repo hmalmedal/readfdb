@@ -7,7 +7,7 @@
 read_fdb_csv(file)
 }
 \arguments{
-\item{file}{Path to file}
+\item{file}{Path to file.}
 }
 \value{
 A data frame.

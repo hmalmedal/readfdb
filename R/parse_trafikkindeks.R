@@ -27,3 +27,5 @@ parse_trafikkindeks_aarsindeks <- function(df) {
   names(df)[3] <- "M\u00e5ned" # Måned
   df
 }
+
+parse_trafikkindeks_kvartalsindeks <- parse_trafikkindeks_aarsindeks

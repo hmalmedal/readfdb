@@ -47,8 +47,7 @@ read_fdb_csv <- function(file, unparsed = FALSE) {
     } else {
       stop("Unknown error.")
     }
-  }
-  else {
+  } else {
     warning("Unimplemented file type. Returning unparsed data frame.")
   }
 

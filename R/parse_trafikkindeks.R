@@ -1,4 +1,8 @@
 parse_trafikkindeks_aarsindeks <- function(df) {
+  type <- unique(df$type)
+  begrenset <- identical(type, "Begrenset trafikkindeks")
+  if (begrenset) df$meta18 <- NULL
+
   checkmate::assertDataFrame(df, ncols = 14)
 
   df <- df %>%
@@ -16,11 +20,25 @@ parse_trafikkindeks_aarsindeks <- function(df) {
                      as.Date(),
                    Indeksdato = ~stringr::str_c(Indeksaar, "-",
                                                 as.integer(Maaned), "-01") %>%
-                     as.Date()) %>%
+                     as.Date())
+
+  if (begrenset) {
+    df <- df %>%
+      tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
+      dplyr::mutate_(mvalue = ~readr::parse_numeric(mvalue))
+  }
+
+  df <- df %>%
     dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Basisaar, ~Indeksaar, ~Maaned, ~everything()) %>%
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Basisdato)
+
+  if (begrenset) {
+    df <- df %>%
+      tidyr::spread_("mkey", "mvalue") %>%
+      dplyr::arrange_(~Basisdato)
+  }
 
   names(df)[1] <- "Basis\u00e5r" # Basisår
   names(df)[2] <- "Indeks\u00e5r" # Indeksår
@@ -31,6 +49,10 @@ parse_trafikkindeks_aarsindeks <- function(df) {
 parse_trafikkindeks_kvartalsindeks <- parse_trafikkindeks_aarsindeks
 
 parse_trafikkindeks_siste_12_maaneder <- function(df) {
+  type <- unique(df$type)
+  begrenset <- identical(type, "Begrenset trafikkindeks")
+  if (begrenset) df$meta18 <- NULL
+
   checkmate::assertDataFrame(df, ncols = 14)
 
   df <- df %>%
@@ -45,11 +67,25 @@ parse_trafikkindeks_siste_12_maaneder <- function(df) {
                      as.Date(),
                    Indeksdato = ~stringr::str_c(Indeksaar, "-",
                                                 as.integer(Maaned), "-01") %>%
-                     as.Date()) %>%
+                     as.Date())
+
+  if (begrenset) {
+    df <- df %>%
+      tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
+      dplyr::mutate_(mvalue = ~readr::parse_numeric(mvalue))
+  }
+
+  df <- df %>%
     dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Basisaar, ~Indeksaar, ~Maaned, ~everything()) %>%
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Basisdato)
+
+  if (begrenset) {
+    df <- df %>%
+      tidyr::spread_("mkey", "mvalue") %>%
+      dplyr::arrange_(~Basisdato)
+  }
 
   names(df)[1] <- "Basis\u00e5r" # Basisår
   names(df)[2] <- "Indeks\u00e5r" # Indeksår

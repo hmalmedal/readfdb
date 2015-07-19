@@ -32,7 +32,8 @@ read_fdb_csv <- function(file) {
     } else {
       stop("Unknown error.")
     }
-  } else if (identical(type, "Trafikkindeks")) {
+  } else if (identical(type, "Trafikkindeks") ||
+             identical(type, "Begrenset trafikkindeks")) {
     if (identical(subtype, "\u00c5rsindeks")) {
       df <- parse_trafikkindeks_aarsindeks(df)
     } else if (identical(subtype, "Kvartalsindeks")) {

@@ -1,12 +1,19 @@
-parse_trafikkindeks_aarsindeks <- function(df) {
+parse_trafikkindeks_aarsindeks <- function(df, total) {
   type <- unique(df$type)
   begrenset <- identical(type, "Begrenset trafikkindeks")
   if (begrenset) df$meta18 <- NULL
 
   checkmate::assertDataFrame(df, ncols = 14)
 
+  if (total) {
+    df <- df %>%
+      dplyr::filter_(~index == "Total")
+  } else {
+    df <- df %>%
+      dplyr::filter_(~index != "Total")
+  }
+
   df <- df %>%
-    dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Maaned = ~index) %>%
     dplyr::mutate_(Basisaar = ~index_name %>%
                      stringr::str_extract("^\\d{4}") %>%
@@ -49,17 +56,24 @@ parse_trafikkindeks_aarsindeks <- function(df) {
 
 parse_trafikkindeks_kvartalsindeks <- parse_trafikkindeks_aarsindeks
 
-parse_trafikkindeks_siste_12_maaneder <- function(df) {
+parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   type <- unique(df$type)
   begrenset <- identical(type, "Begrenset trafikkindeks")
   if (begrenset) df$meta18 <- NULL
 
   checkmate::assertDataFrame(df, ncols = 14)
 
+  if (total) {
+    df <- df %>%
+      dplyr::filter_(~index == "Total")
+  } else {
+    df <- df %>%
+      dplyr::filter_(~index != "Total")
+  }
+
   df <- df %>%
-    dplyr::filter_(~index != "Total") %>%
     tidyr::separate_("index", c("Maaned", "Basisaar", "Indeksaar"),
-                     sep = " |/") %>%
+                     sep = " |/", extra = "drop") %>%
     dplyr::mutate_(Maaned = ~factor(Maaned, maaneder),
                    Basisaar = ~as.integer(Basisaar) + 2000,
                    Indeksaar = ~as.integer(Indeksaar) + 2000,

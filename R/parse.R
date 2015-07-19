@@ -53,11 +53,18 @@ parse_trafikkverdier <- function(df) {
   df
 }
 
-parse_produksjon <- function(df) {
+parse_produksjon <- function(df, total) {
   checkmate::assertDataFrame(df, ncols = 14)
 
+  if (total) {
+    df <- df %>%
+      dplyr::filter_(~index == "Total")
+  } else {
+    df <- df %>%
+      dplyr::filter_(~index != "Total")
+  }
+
   df <- df %>%
-    dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Maaned = ~index) %>%
     dplyr::mutate_(Aar = ~as.integer(index_name),
                    Maaned = ~Maaned %>%

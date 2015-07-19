@@ -79,11 +79,18 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
   df
 }
 
-parse_variasjonskurver_aarsvariasjon <- function(df) {
+parse_variasjonskurver_aarsvariasjon <- function(df, total) {
   checkmate::assertDataFrame(df, ncols = 15)
 
+  if (total) {
+    df <- df %>%
+      dplyr::filter_(~index == "Total")
+  } else {
+    df <- df %>%
+      dplyr::filter_(~index != "Total")
+  }
+
   df <- df %>%
-    dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Maaned = ~index) %>%
     dplyr::mutate_(Aar = ~index_name %>%
                      as.integer(),

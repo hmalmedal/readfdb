@@ -13,7 +13,7 @@ parse_variasjonskurver_dognvariasjon <- function(df) {
                    Kl = ~factor(Kl),
                    key = ~meta19 %>%
                      stringr::str_replace("\\s*\\d{4}$", "")) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~Uke, ~Dag, ~Kl, ~everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
@@ -53,7 +53,7 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
                      stringr::str_extract("\\d{1,2}$") %>%
                      as.integer(),
                    Dag = ~factor(Dag, ukedager)) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~Uke, ~Dag, ~everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
@@ -90,7 +90,7 @@ parse_variasjonskurver_aarsvariasjon <- function(df) {
                    Maaned = ~factor(Maaned, maaneder),
                    Dato = ~stringr::str_c(Aar, "-", as.integer(Maaned),
                                           "-01") %>% as.Date()) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Dato)

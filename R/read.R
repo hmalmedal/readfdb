@@ -24,11 +24,11 @@ read_fdb_csv <- function(file) {
 
   if (identical(type, "Variasjonskurver")) {
     if (identical(subtype, "D\u00f8gnvariasjon")) {
-      df <- parse_dognvariasjon(df)
+      df <- parse_variasjonskurver_dognvariasjon(df)
     } else if (identical(subtype, "Ukesvariasjon")) {
-      df <- parse_ukesvariasjon(df)
+      df <- parse_variasjonskurver_ukesvariasjon(df)
     } else if (identical(subtype, "\u00c5rsvariasjon")) {
-      df <- parse_aarsvariasjon(df)
+      df <- parse_variasjonskurver_aarsvariasjon(df)
     } else {
       stop("Unknown error.")
     }

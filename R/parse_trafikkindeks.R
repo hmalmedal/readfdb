@@ -31,14 +31,15 @@ parse_trafikkindeks_aarsindeks <- function(df) {
   df <- df %>%
     dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Basisaar, ~Indeksaar, ~Maaned, ~everything()) %>%
-    tidyr::spread_("key", "value") %>%
-    dplyr::arrange_(~Basisdato)
+    tidyr::spread_("key", "value")
 
   if (begrenset) {
     df <- df %>%
-      tidyr::spread_("mkey", "mvalue") %>%
-      dplyr::arrange_(~Basisdato)
+      tidyr::spread_("mkey", "mvalue")
   }
+
+  df <- df %>%
+    dplyr::arrange_(~Basisdato)
 
   names(df)[1] <- "Basis\u00e5r" # Basisår
   names(df)[2] <- "Indeks\u00e5r" # Indeksår
@@ -78,14 +79,15 @@ parse_trafikkindeks_siste_12_maaneder <- function(df) {
   df <- df %>%
     dplyr::select_(~-index_name, ~-matches("^meta|type$")) %>%
     dplyr::select_(~Basisaar, ~Indeksaar, ~Maaned, ~everything()) %>%
-    tidyr::spread_("key", "value") %>%
-    dplyr::arrange_(~Basisdato)
+    tidyr::spread_("key", "value")
 
   if (begrenset) {
     df <- df %>%
-      tidyr::spread_("mkey", "mvalue") %>%
-      dplyr::arrange_(~Basisdato)
+      tidyr::spread_("mkey", "mvalue")
   }
+
+  df <- df %>%
+    dplyr::arrange_(~Basisdato)
 
   names(df)[1] <- "Basis\u00e5r" # Basisår
   names(df)[2] <- "Indeks\u00e5r" # Indeksår

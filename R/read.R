@@ -49,6 +49,8 @@ read_fdb_csv <- function(file, unparsed = FALSE) {
     }
   } else if (identical(type, "Trafikkverdier")) {
     df <- parse_trafikkverdier(df)
+  } else if (identical(type, "Produksjon")) {
+    df <- parse_produksjon(df)
   } else {
     warning("Unimplemented file type. Returning unparsed data frame.")
   }

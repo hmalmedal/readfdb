@@ -52,3 +52,24 @@ parse_trafikkverdier <- function(df) {
   names(df)[1] <- "\u00c5r" # År
   df
 }
+
+parse_produksjon <- function(df) {
+  checkmate::assertDataFrame(df, ncols = 14)
+
+  df <- df %>%
+    dplyr::filter_(~index != "Total") %>%
+    dplyr::rename_(Maaned = ~index) %>%
+    dplyr::mutate_(Aar = ~as.integer(index_name),
+                   Maaned = ~Maaned %>%
+                     stringr::str_extract("^\\w{3}") %>%
+                     factor(maaneder),
+                   Dato = ~stringr::str_c(Aar, "-", as.integer(Maaned),
+                                          "-01") %>% as.Date()) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
+    tidyr::spread_("key", "value")
+
+  names(df)[1] <- "\u00c5r" # År
+  names(df)[2] <- "M\u00e5ned" # Måned
+  df
+}

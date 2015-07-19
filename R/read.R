@@ -32,7 +32,14 @@ read_fdb_csv <- function(file) {
     } else {
       stop("Unknown error.")
     }
-  } else {
+  } else if (identical(type, "Trafikkindeks")) {
+    if (identical(subtype, "\u00c5rsindeks")) {
+      df <- parse_trafikkindeks_aarsindeks(df)
+    } else {
+      warning("Unimplemented file type. Returning unparsed data frame.")
+    }
+  }
+  else {
     warning("Unimplemented file type. Returning unparsed data frame.")
   }
 

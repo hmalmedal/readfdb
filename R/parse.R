@@ -21,7 +21,8 @@ parse_csv_page <- function(csv_page) {
   df <- readr::read_csv(csv_str, col_names = col_names, col_types = col_types,
                         na = "?", skip = meta_length + 1) %>%
     tidyr::gather_("key", "value", col_names[-1]) %>%
-    dplyr::mutate_(~index_name, .dots = meta_dots)
+    dplyr::mutate_(~index_name, .dots = meta_dots) %>%
+    dplyr::select_(~index, ~index_name, ~everything())
   df
 }
 

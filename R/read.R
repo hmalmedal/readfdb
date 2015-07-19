@@ -37,8 +37,10 @@ read_fdb_csv <- function(file) {
       df <- parse_trafikkindeks_aarsindeks(df)
     } else if (identical(subtype, "Kvartalsindeks")) {
       df <- parse_trafikkindeks_kvartalsindeks(df)
+    } else if (identical(subtype, "Siste 12 m\u00e5neder")) {
+      df <- parse_trafikkindeks_siste_12_maaneder(df)
     } else {
-      warning("Unimplemented file type. Returning unparsed data frame.")
+      stop("Unknown error.")
     }
   }
   else {

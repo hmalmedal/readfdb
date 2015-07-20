@@ -21,6 +21,7 @@ parse_csv_page <- function(csv_page) {
     tidyr::gather_("key", "value", col_names[-1]) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots) %>%
     dplyr::select_(~index, ~index_name, ~everything())
+
   df
 }
 
@@ -30,8 +31,11 @@ parse_meta <- function(csv_page, meta_length) {
     t() %>%
     as.vector() %>%
     na.omit()
+
   i <- meta != ""
-  meta[i]
+  meta <- meta[i]
+
+  meta
 }
 
 parse_trafikkverdier <- function(df) {

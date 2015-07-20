@@ -13,10 +13,10 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
   checkmate::assertFlag(total)
   checkmate::assertFlag(unparsed)
 
-  csv_lines <- readr::read_lines(file) %>%
-    iconv("latin1", "utf8")
-
-  csv_pages <- paginate(csv_lines)
+  csv_pages <- readr::read_file(file) %>%
+    iconv("latin1", "utf8") %>%
+    strsplit("\n,*\\d{1,2}-\\w{3}-\\d{4},*Side \\d+,* av \\d+,*\n") %>%
+    getElement(1)
 
   df <- lapply(csv_pages, parse_csv_page) %>%
     dplyr::bind_rows()

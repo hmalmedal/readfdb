@@ -51,7 +51,9 @@ parse_trafikkverdier <- function(df) {
     dplyr::select_(~Aar, ~everything()) %>%
     tidyr::spread_("index", "value")
 
-  names(df)[1] <- "\u00c5r" # År
+  df <- df %>%
+    dplyr::rename_("\u00c5r" = ~Aar)
+
   df
 }
 
@@ -78,7 +80,9 @@ parse_produksjon <- function(df, total) {
     dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
     tidyr::spread_("key", "value")
 
-  names(df)[1] <- "\u00c5r" # År
-  names(df)[2] <- "M\u00e5ned" # Måned
+  df <- df %>%
+    dplyr::rename_("\u00c5r" = ~Aar,
+                   "M\u00e5ned" = ~Maaned)
+
   df
 }

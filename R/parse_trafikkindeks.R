@@ -48,9 +48,11 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
   df <- df %>%
     dplyr::arrange_(~Basisdato)
 
-  names(df)[1] <- "Basis\u00e5r" # Basisår
-  names(df)[2] <- "Indeks\u00e5r" # Indeksår
-  names(df)[3] <- "M\u00e5ned" # Måned
+  df <- df %>%
+    dplyr::rename_("Basis\u00e5r" = ~Basisaar,
+                   "Indeks\u00e5r" = ~Indeksaar,
+                   "M\u00e5ned" = ~Maaned)
+
   df
 }
 
@@ -103,8 +105,10 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   df <- df %>%
     dplyr::arrange_(~Basisdato)
 
-  names(df)[1] <- "Basis\u00e5r" # Basisår
-  names(df)[2] <- "Indeks\u00e5r" # Indeksår
-  names(df)[3] <- "M\u00e5ned" # Måned
+  df <- df %>%
+    dplyr::rename_("Basis\u00e5r" = ~Basisaar,
+                   "Indeks\u00e5r" = ~Indeksaar,
+                   "M\u00e5ned" = ~Maaned)
+
   df
 }

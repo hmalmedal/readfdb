@@ -36,7 +36,9 @@ parse_variasjonskurver_dognvariasjon <- function(df) {
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Tid)
 
-  names(df)[1] <- "\u00c5r" # År
+  df <- df %>%
+    dplyr::rename_("\u00c5r" = ~Aar)
+
   df
 }
 
@@ -75,7 +77,9 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Dato)
 
-  names(df)[1] <- "\u00c5r" # År
+  df <- df %>%
+    dplyr::rename_("\u00c5r" = ~Aar)
+
   df
 }
 
@@ -102,7 +106,9 @@ parse_variasjonskurver_aarsvariasjon <- function(df, total) {
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Dato)
 
-  names(df)[1] <- "\u00c5r" # År
-  names(df)[2] <- "M\u00e5ned" # Måned
+  df <- df %>%
+    dplyr::rename_("\u00c5r" = ~Aar,
+                   "M\u00e5ned" = ~Maaned)
+
   df
 }

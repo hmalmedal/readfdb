@@ -1,4 +1,6 @@
 parse_csv_page <- function(csv_page) {
+  if (identical(csv_page, "")) return(NULL)
+
   meta_length <- 7
 
   meta <- parse_meta(csv_page, meta_length)

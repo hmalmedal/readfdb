@@ -15,7 +15,7 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
   csv_pages <- readr::read_file(file) %>%
     iconv("latin1", "utf8") %>%
     stringr::str_split("\n[^\n]*Side \\d[^\n]*\n") %>%
-    getElement(1)
+    unlist()
 
   df <- lapply(csv_pages, parse_csv_page) %>%
     dplyr::bind_rows()

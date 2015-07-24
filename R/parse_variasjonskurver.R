@@ -1,8 +1,18 @@
-parse_variasjonskurver_dognvariasjon <- function(df) {
+parse_variasjonskurver_dognvariasjon <- function(df, total) {
   checkmate::assertDataFrame(df, ncols = 15)
 
+  kl <- stringr::str_pad(0:24, 2, pad = "0")
+  kl <- stringr::str_c(kl[-25], kl[-1], sep = "-")
+
+  if (total) {
+    df <- df %>%
+      dplyr::filter_(~index == "Total")
+  } else {
+    df <- df %>%
+      dplyr::filter_(~index != "Total")
+  }
+
   df <- df %>%
-    dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Dag = ~key, Kl = ~index) %>%
     dplyr::mutate_(Aar = ~meta19 %>%
                      stringr::str_extract("\\d{4}$") %>%
@@ -10,7 +20,7 @@ parse_variasjonskurver_dognvariasjon <- function(df) {
                    Uke = ~index_name %>%
                      stringr::str_extract("\\d{1,2}$") %>%
                      as.integer(),
-                   Kl = ~factor(Kl),
+                   Kl = ~factor(Kl, kl),
                    key = ~meta19 %>%
                      stringr::str_replace("\\s*\\d{4}$", "")) %>%
     dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
@@ -27,10 +37,18 @@ parse_variasjonskurver_dognvariasjon <- function(df) {
     lubridate::ymd()
   i <- min(which(df$Uke == min_uke))
   timer <- lubridate::hours(seq_along(df$Uke) - i)
+  dager <- lubridate::days(seq_along(df$Uke) - i)
+
+  if (total) {
+    df <- df %>%
+      dplyr::mutate_(Tid = ~mandag + dager)
+  } else {
+    df <- df %>%
+      dplyr::mutate_(Tid = ~mandag + timer)
+  }
 
   df <- df %>%
-    dplyr::mutate_(Tid = ~mandag + timer,
-                   Dato = ~as.Date(Tid),
+    dplyr::mutate_(Dato = ~as.Date(Tid),
                    Ukedato = ~ISOweek::date2ISOweek(Dato)) %>%
     dplyr::filter_(~lubridate::year(Dato) == aar) %>%
     tidyr::spread_("key", "value") %>%

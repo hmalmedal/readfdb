@@ -29,8 +29,7 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
 
   if (identical(type, "Variasjonskurver")) {
     if (identical(subtype, "D\u00f8gnvariasjon")) {
-      if (total) warning("Parameter \"total\" not implemented.")
-      df <- parse_variasjonskurver_dognvariasjon(df)
+      df <- parse_variasjonskurver_dognvariasjon(df, total)
     } else if (identical(subtype, "Ukesvariasjon")) {
       if (total) warning("Parameter \"total\" not implemented.")
       df <- parse_variasjonskurver_ukesvariasjon(df)

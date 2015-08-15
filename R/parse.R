@@ -8,6 +8,9 @@ parse_csv_page <- function(csv_page) {
 
   col_names <- readr::read_csv(csv_page, skip = meta_length, n_max = 0) %>%
     names()
+
+  Encoding(col_names) <- "UTF-8"
+
   i <- col_names != "[EMPTY]"
   col_names <- col_names[i]
   index_name <- col_names[1]
@@ -19,7 +22,11 @@ parse_csv_page <- function(csv_page) {
   col_types <- stringr::str_c(col_types, collapse = "")
 
   df <- readr::read_csv(csv_page, col_names = col_names, col_types = col_types,
-                        na = "?", skip = meta_length + 1) %>%
+                        na = "?", skip = meta_length + 1)
+
+  Encoding(df$index) <- "UTF-8"
+
+  df <- df %>%
     tidyr::gather_("key", "value", col_names[-1]) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots) %>%
     dplyr::select_(~index, ~index_name, ~everything())
@@ -36,6 +43,8 @@ parse_meta <- function(csv_page, meta_length) {
 
   i <- meta != ""
   meta <- meta[i]
+
+  Encoding(meta) <- "UTF-8"
 
   meta
 }

@@ -13,7 +13,7 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
   checkmate::assertFlag(unparsed)
 
   csv_pages <- readr::read_file(file) %>%
-    iconv("latin1", "utf8") %>%
+    stringr::str_conv("latin1") %>%
     stringr::str_split("\n[^\n]*Side \\d[^\n]*\n") %>%
     unlist()
 

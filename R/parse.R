@@ -36,12 +36,10 @@ parse_csv_page <- function(csv_page) {
 
 parse_meta <- function(csv_page, meta_length) {
   meta <- csv_page %>%
-    readr::read_csv(col_names = FALSE, n_max = meta_length) %>%
-    t() %>%
-    as.vector() %>%
-    na.omit()
+    readr::tokenize(n_max = meta_length) %>%
+    unlist()
 
-  i <- meta != ""
+  i <- meta != "[EMPTY]"
   meta <- meta[i]
 
   Encoding(meta) <- "UTF-8"

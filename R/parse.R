@@ -23,7 +23,7 @@ parse_csv_page <- function(csv_page) {
   names(df)[1] <- "index"
 
   df <- df %>%
-    tidyr::gather_("key", "value", names(.)[-1]) %>%
+    tidyr::gather_("key", "value", names(df)[-1]) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots) %>%
     dplyr::select_(~index, ~index_name, ~everything())
 

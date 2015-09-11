@@ -13,3 +13,5 @@ Imports: checkmate,
     stringr,
     tidyr
 Suggests: testthat
+URL: https://github.com/hmalmedal/readfdb
+BugReports: https://github.com/hmalmedal/readfdb/issues

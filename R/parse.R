@@ -6,8 +6,7 @@ parse_csv_page <- function(csv_page) {
   meta <- parse_meta(csv_page, meta_length)
   meta_dots <- extract_meta_dots(meta)
 
-  col_names <- readr::read_csv(csv_page, skip = meta_length, n_max = 0) %>%
-    names()
+  col_names <- readr::tokenize(csv_page)[[meta_length + 1]]
 
   Encoding(col_names) <- "UTF-8"
 

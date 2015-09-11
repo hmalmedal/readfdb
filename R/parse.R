@@ -6,27 +6,24 @@ parse_csv_page <- function(csv_page) {
   meta <- parse_meta(csv_page, meta_length)
   meta_dots <- extract_meta_dots(meta)
 
-  col_names <- readr::tokenize(csv_page)[[meta_length + 1]]
-
-  Encoding(col_names) <- "UTF-8"
-
-  i <- col_names != "[EMPTY]"
-  col_names <- col_names[i]
-  index_name <- col_names[1]
-  col_names[1] <- "index"
+  i <- readr::tokenize(csv_page)[[meta_length + 1]] != "[EMPTY]"
 
   col_types = rep("n", length(i))
   col_types[1] <- "c"
   col_types[!i] <- "_"
   col_types <- stringr::str_c(col_types, collapse = "")
 
-  df <- readr::read_csv(csv_page, col_names = col_names, col_types = col_types,
-                        na = "?", skip = meta_length + 1)
+  df <- readr::read_csv(csv_page, col_types = col_types, na = "?",
+                        skip = meta_length)
 
-  Encoding(df$index) <- "UTF-8"
+  Encoding(names(df)) <- "UTF-8"
+  Encoding(df[[1]]) <- "UTF-8"
+
+  index_name <- names(df)[1]
+  names(df)[1] <- "index"
 
   df <- df %>%
-    tidyr::gather_("key", "value", col_names[-1]) %>%
+    tidyr::gather_("key", "value", names(.)[-1]) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots) %>%
     dplyr::select_(~index, ~index_name, ~everything())
 

@@ -112,13 +112,23 @@ parse_variasjonskurver_aarsvariasjon <- function(df, total) {
       dplyr::filter_(~index != "Total")
   }
 
+  if (identical(unique(df$index_name), "\u00c5r")) {
+    df <- df %>%
+      dplyr::rename_(Aar = ~index) %>%
+      dplyr::mutate_(Aar = ~as.integer(Aar),
+                     Maaned = ~factor(NA, maaneder),
+                     Dato = ~stringr::str_c(Aar, "-01-01") %>% as.Date())
+  } else {
+    df <- df %>%
+      dplyr::rename_(Maaned = ~index) %>%
+      dplyr::mutate_(Aar = ~index_name %>%
+                       as.integer(),
+                     Maaned = ~factor(Maaned, maaneder),
+                     Dato = ~stringr::str_c(Aar, "-", as.integer(Maaned),
+                                            "-01") %>% as.Date())
+  }
+
   df <- df %>%
-    dplyr::rename_(Maaned = ~index) %>%
-    dplyr::mutate_(Aar = ~index_name %>%
-                     as.integer(),
-                   Maaned = ~factor(Maaned, maaneder),
-                   Dato = ~stringr::str_c(Aar, "-", as.integer(Maaned),
-                                          "-01") %>% as.Date()) %>%
     dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
     tidyr::spread_("key", "value") %>%

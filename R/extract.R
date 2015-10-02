@@ -1,5 +1,5 @@
 extract_meta_dots <- function(meta) {
-  checkmate::assertCharacter(meta, min.len = 17, max.len = 19)
+  checkmate::assertCharacter(meta, min.len = 17, max.len = 20)
 
   meta_dots <- stringr::str_c("~meta[", seq_along(meta), "]") %>%
     lapply(as.formula, env = parent.frame(n = 2))

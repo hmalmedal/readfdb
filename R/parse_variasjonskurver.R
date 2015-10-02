@@ -1,5 +1,5 @@
 parse_variasjonskurver_dognvariasjon <- function(df, total) {
-  checkmate::assertDataFrame(df, ncols = 15)
+  checkmate::assertDataFrame(df, min.cols = 15)
 
   kl <- stringr::str_pad(0:24, 2, pad = "0")
   kl <- stringr::str_c(kl[-25], kl[-1], sep = "-")

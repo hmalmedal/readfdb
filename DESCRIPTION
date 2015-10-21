@@ -9,7 +9,7 @@ Imports: checkmate,
     dplyr,
     ISOweek,
     lubridate,
-    readr,
+    readr (>= 0.2.1),
     stringr,
     tidyr
 Suggests: testthat

@@ -32,7 +32,7 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
   if (begrenset) {
     df <- df %>%
       tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
-      dplyr::mutate_(mvalue = ~readr::parse_numeric(mvalue))
+      dplyr::mutate_(mvalue = ~readr::parse_number(mvalue))
   }
 
   df <- df %>%
@@ -89,7 +89,7 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   if (begrenset) {
     df <- df %>%
       tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
-      dplyr::mutate_(mvalue = ~readr::parse_numeric(mvalue))
+      dplyr::mutate_(mvalue = ~readr::parse_number(mvalue))
   }
 
   df <- df %>%

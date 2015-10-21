@@ -16,9 +16,6 @@ parse_csv_page <- function(csv_page) {
   df <- readr::read_csv(csv_page, col_types = col_types, na = "?",
                         skip = meta_length, progress = FALSE)
 
-  Encoding(names(df)) <- "UTF-8"
-  Encoding(df[[1]]) <- "UTF-8"
-
   index_name <- names(df)[1]
   names(df)[1] <- "index"
 

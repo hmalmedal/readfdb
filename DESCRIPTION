@@ -5,13 +5,16 @@ Authors@R: person("Håkon", "Malmedal", email = "hmalmedal@gmail.com", role = c(
 Description: Read files from 'Ferjedatabanken'.
 License: GPL (>= 3)
 Encoding: UTF-8
-Imports: checkmate,
+Imports:
+    checkmate,
     dplyr,
     ISOweek,
     lubridate,
     readr (>= 0.2.1),
     stringr,
     tidyr
-Suggests: testthat
+Suggests:
+    testthat
 URL: https://github.com/hmalmedal/readfdb
 BugReports: https://github.com/hmalmedal/readfdb/issues
+RoxygenNote: 5.0.0

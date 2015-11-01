@@ -88,3 +88,33 @@ parse_produksjon <- function(df, total) {
 
   df
 }
+
+parse_sonefordeling <- function(df, total) {
+  checkmate::assertDataFrame(df, ncols = 15)
+
+  if (total) {
+    df <- df %>%
+      dplyr::filter_(~index == "Total")
+  } else {
+    df <- df %>%
+      dplyr::filter_(~index != "Total")
+  }
+
+  df <- df %>%
+    dplyr::rename_(Sone = ~index) %>%
+    dplyr::mutate_(Sone = ~as.integer(Sone),
+                   Aar = ~meta17 %>%
+                     stringr::str_extract("\\d{4}") %>%
+                     as.integer(),
+                   Maanedsintervall = ~meta17 %>%
+                     stringr::str_replace_all(" \\d{4}", "")) %>%
+    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~everything()) %>%
+    tidyr::spread_("key", "value")
+
+  df <- df %>%
+    dplyr::rename_("\u00c5r" = ~Aar,
+                   "M\u00e5nedsintervall" = ~Maanedsintervall)
+
+  df
+}

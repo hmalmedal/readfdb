@@ -47,14 +47,15 @@ parse_trafikkverdier <- function(df) {
     dplyr::rename_(Trafikktype = ~key) %>%
     dplyr::mutate_(Aar = ~as.integer(index_name),
                    index = ~factor(index, unique(index)),
-                   Periode = ~meta18 %>%
+                   Maanedsintervall = ~meta18 %>%
                      stringr::str_replace_all(" \\d{4}", "")) %>%
     dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~everything()) %>%
     tidyr::spread_("index", "value")
 
   df <- df %>%
-    dplyr::rename_("\u00c5r" = ~Aar)
+    dplyr::rename_("\u00c5r" = ~Aar,
+                   "M\u00e5nedsintervall" = ~Maanedsintervall)
 
   df
 }

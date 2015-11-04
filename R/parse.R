@@ -95,7 +95,8 @@ parse_sonefordeling <- function(df, total) {
 
   if (total) {
     df <- df %>%
-      dplyr::filter_(~index == "Total")
+      dplyr::filter_(~index == "Total") %>%
+      dplyr::mutate_(index = NA)
   } else {
     df <- df %>%
       dplyr::filter_(~index != "Total")

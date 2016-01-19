@@ -17,4 +17,4 @@ Suggests:
     testthat
 URL: https://github.com/hmalmedal/readfdb
 BugReports: https://github.com/hmalmedal/readfdb/issues
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

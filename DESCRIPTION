@@ -12,7 +12,7 @@ Imports:
     lubridate,
     readr (>= 0.2.1),
     stringr,
-    tidyr
+    tidyr (>= 0.4.0)
 Suggests:
     testthat
 URL: https://github.com/hmalmedal/readfdb

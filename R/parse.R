@@ -8,8 +8,7 @@ parse_csv_page <- function(csv_page) {
 
   i <- readr::tokenize(csv_page)[[meta_length + 1]] == "[EMPTY]"
 
-  col_types <- rep("n", length(i))
-  col_types[1] <- "c"
+  col_types <- rep("c", length(i))
   col_types[i] <- "_"
   col_types <- stringr::str_c(col_types, collapse = "")
 
@@ -21,6 +20,8 @@ parse_csv_page <- function(csv_page) {
 
   df <- df %>%
     tidyr::gather_("key", "value", names(df)[-1], factor_key = TRUE) %>%
+    dplyr::mutate_(value = ~stringr::str_replace_all(value, ",", "") %>%
+                     as.numeric()) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots) %>%
     dplyr::select_(~index, ~index_name, ~everything())
 

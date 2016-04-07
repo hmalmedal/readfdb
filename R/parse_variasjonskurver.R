@@ -31,9 +31,12 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
   aar <- df$Aar[1]
 
   min_uke0 <- stringr::str_pad(min_uke, 2, pad = "0")
+
   mandag <- stringr::str_c(aar, "-W", min_uke0, "-1") %>%
     ISOweek::ISOweek2date() %>%
-    lubridate::ymd(tz = "UTC")
+    as.POSIXct()
+  attr(mandag, "tzone") <- "UTC"
+
   i <- min(which(df$Uke == min_uke))
   timer <- lubridate::hours(seq_along(df$Uke) - i)
   dager <- lubridate::days(seq_along(df$Uke) - i)

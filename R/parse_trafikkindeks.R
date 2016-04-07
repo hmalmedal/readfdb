@@ -22,11 +22,9 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
                      stringr::str_extract("\\d{4}$") %>%
                      as.integer(),
                    Maaned = ~factor(Maaned, maaneder),
-                   Basisdato = ~stringr::str_c(Basisaar, "-",
-                                               as.integer(Maaned), "-01") %>%
+                   Basisdato = ~lubridate::make_datetime(Basisaar, Maaned) %>%
                      as.Date(),
-                   Indeksdato = ~stringr::str_c(Indeksaar, "-",
-                                                as.integer(Maaned), "-01") %>%
+                   Indeksdato = ~lubridate::make_datetime(Indeksaar, Maaned) %>%
                      as.Date())
 
   if (begrenset) {
@@ -79,11 +77,9 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
     dplyr::mutate_(Maaned = ~factor(Maaned, maaneder),
                    Basisaar = ~as.integer(Basisaar) + 2000,
                    Indeksaar = ~as.integer(Indeksaar) + 2000,
-                   Basisdato = ~stringr::str_c(Basisaar, "-",
-                                               as.integer(Maaned), "-01") %>%
+                   Basisdato = ~lubridate::make_datetime(Basisaar, Maaned) %>%
                      as.Date(),
-                   Indeksdato = ~stringr::str_c(Indeksaar, "-",
-                                                as.integer(Maaned), "-01") %>%
+                   Indeksdato = ~lubridate::make_datetime(Indeksaar, Maaned) %>%
                      as.Date())
 
   if (begrenset) {

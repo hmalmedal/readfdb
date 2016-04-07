@@ -30,9 +30,8 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
   if (min_uke >= 52) warning("Check week!")
   aar <- df$Aar[1]
 
-  mandag <- stringr::str_c(aar, "-W",
-                           stringr::str_pad(min_uke, 2, pad = "0"),
-                           "-1") %>%
+  min_uke0 <- stringr::str_pad(min_uke, 2, pad = "0")
+  mandag <- stringr::str_c(aar, "-W", min_uke0, "-1") %>%
     ISOweek::ISOweek2date() %>%
     lubridate::ymd(tz = "UTC")
   i <- min(which(df$Uke == min_uke))
@@ -80,9 +79,8 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
   if (min_uke >= 52) warning("Check week!")
   aar <- df$Aar[1]
 
-  mandag <- stringr::str_c(aar, "-W",
-                           stringr::str_pad(min_uke, 2, pad = "0"),
-                           "-1") %>%
+  min_uke0 <- stringr::str_pad(min_uke, 2, pad = "0")
+  mandag <- stringr::str_c(aar, "-W", min_uke0, "-1") %>%
     ISOweek::ISOweek2date()
 
   df <- df %>%

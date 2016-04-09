@@ -6,14 +6,9 @@ parse_csv_page <- function(csv_page) {
   meta <- parse_meta(csv_page, meta_length)
   meta_dots <- extract_meta_dots(meta)
 
-  i <- readr::tokenize(csv_page)[[meta_length + 1]] == "[EMPTY]"
-
-  col_types <- rep("c", length(i))
-  col_types[i] <- "_"
-  col_types <- stringr::str_c(col_types, collapse = "")
-
-  df <- readr::read_csv(csv_page, col_types = col_types, na = "?",
-                        skip = meta_length, progress = FALSE)
+  df <- read.csv(text = csv_page, na.strings = "?", colClasses = "character",
+                 skip = meta_length, check.names = FALSE, encoding = "UTF-8")
+  df <- dplyr::tbl_df(df[names(df) != ""])
 
   index_name <- names(df)[1]
   names(df)[1] <- "index"

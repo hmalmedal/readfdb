@@ -26,7 +26,7 @@ parse_csv_page <- function(csv_page) {
 parse_meta <- function(csv_page, meta_length) {
   meta <- csv_page %>%
     readr::tokenize(n_max = meta_length) %>%
-    unlist()
+    purrr::flatten_chr()
 
   i <- meta != "[EMPTY]"
   meta <- meta[i]

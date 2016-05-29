@@ -14,10 +14,9 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
 
   csv_pages <- readr::read_file(file, readr::locale(encoding = "latin1")) %>%
     stringr::str_split("\n[^\n]*Side \\d[^\n]*\n") %>%
-    unlist()
+    purrr::flatten_chr()
 
-  df <- lapply(csv_pages, parse_csv_page) %>%
-    dplyr::bind_rows()
+  df <- purrr::map_df(csv_pages, parse_csv_page)
 
   if (unparsed) return(df)
 

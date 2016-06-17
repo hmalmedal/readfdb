@@ -9,9 +9,6 @@
 #' @return A data frame.
 #' @export
 read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
-  checkmate::assertFlag(total)
-  checkmate::assertFlag(unparsed)
-
   csv_pages <- readr::read_file(file, readr::locale(encoding = "latin1")) %>%
     stringr::str_split("\n[^\n]*Side \\d[^\n]*\n") %>%
     purrr::flatten_chr()
@@ -19,8 +16,6 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
   df <- purrr::map_df(csv_pages, parse_csv_page)
 
   if (unparsed) return(df)
-
-  checkmate::assertDataFrame(df, min.cols = 14)
 
   type <- unique(df$type)
   subtype <- unique(df$subtype)

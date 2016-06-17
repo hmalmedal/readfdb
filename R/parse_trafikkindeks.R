@@ -3,8 +3,6 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
   begrenset <- identical(type, "Begrenset trafikkindeks")
   if (begrenset) df$meta18 <- NULL
 
-  checkmate::assertDataFrame(df, ncols = 14)
-
   if (total) {
     df <- df %>%
       dplyr::filter_(~index == "Total")
@@ -60,8 +58,6 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   type <- unique(df$type)
   begrenset <- identical(type, "Begrenset trafikkindeks")
   if (begrenset) df$meta18 <- NULL
-
-  checkmate::assertDataFrame(df, ncols = 14)
 
   if (total) {
     df <- df %>%

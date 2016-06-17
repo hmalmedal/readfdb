@@ -6,7 +6,6 @@ Description: Read files from 'Ferjedatabanken'.
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports:
-    checkmate,
     dplyr,
     ISOweek,
     lubridate (>= 1.5.6),

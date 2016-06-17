@@ -1,6 +1,4 @@
 parse_variasjonskurver_dognvariasjon <- function(df, total) {
-  checkmate::assertDataFrame(df, min.cols = 15)
-
   kl <- stringr::str_pad(0:24, 2, pad = "0")
   kl <- stringr::str_c(kl[-25], kl[-1], sep = "-")
 
@@ -63,8 +61,6 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
 }
 
 parse_variasjonskurver_ukesvariasjon <- function(df) {
-  checkmate::assertDataFrame(df, ncols = 15)
-
   df <- df %>%
     dplyr::filter_(~index != "Total") %>%
     dplyr::rename_(Dag = ~index) %>%
@@ -103,8 +99,6 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
 }
 
 parse_variasjonskurver_aarsvariasjon <- function(df, total) {
-  checkmate::assertDataFrame(df, min.cols = 15)
-
   if (total) {
     df <- df %>%
       dplyr::filter_(~index == "Total")

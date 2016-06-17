@@ -37,8 +37,6 @@ parse_meta <- function(csv_page, meta_length) {
 }
 
 parse_trafikkverdier <- function(df) {
-  checkmate::assertDataFrame(df, ncols = 15)
-
   df <- df %>%
     dplyr::rename_(Trafikktype = ~key) %>%
     dplyr::mutate_(Aar = ~as.integer(index_name),
@@ -57,8 +55,6 @@ parse_trafikkverdier <- function(df) {
 }
 
 parse_produksjon <- function(df, total) {
-  checkmate::assertDataFrame(df, ncols = 14)
-
   if (total) {
     df <- df %>%
       dplyr::filter_(~index == "Total")
@@ -87,8 +83,6 @@ parse_produksjon <- function(df, total) {
 }
 
 parse_sonefordeling <- function(df, total) {
-  checkmate::assertDataFrame(df, ncols = 15)
-
   if (total) {
     df <- df %>%
       dplyr::filter_(~index == "Total") %>%

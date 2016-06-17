@@ -103,7 +103,7 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
 }
 
 parse_variasjonskurver_aarsvariasjon <- function(df, total) {
-  checkmate::assertDataFrame(df, ncols = 15)
+  checkmate::assertDataFrame(df, min.cols = 15)
 
   if (total) {
     df <- df %>%

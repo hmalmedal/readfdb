@@ -10,17 +10,29 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
       dplyr::filter_(~index != "Total")
   }
 
+  meta_aar <- unique(df$meta19) %>%
+    stringr::str_extract("\\d{4}$") %>%
+    as.integer()
+
+  if (is.na(meta_aar)) {
+    meta_aar <- unique(df$meta20) %>%
+      stringr::str_extract("\\d{4}$") %>%
+      as.integer()
+    meta_key <- unique(df$meta20) %>%
+      stringr::str_replace("\\s*\\d{4}$", "")
+  } else {
+    meta_key <- unique(df$meta19) %>%
+      stringr::str_replace("\\s*\\d{4}$", "")
+  }
+
   df <- df %>%
     dplyr::rename_(Dag = ~key, Kl = ~index) %>%
-    dplyr::mutate_(Aar = ~meta19 %>%
-                     stringr::str_extract("\\d{4}$") %>%
-                     as.integer(),
+    dplyr::mutate_(Aar = ~meta_aar,
                    Uke = ~index_name %>%
                      stringr::str_extract("\\d{1,2}$") %>%
                      as.integer(),
                    Kl = ~factor(Kl, kl),
-                   key = ~meta19 %>%
-                     stringr::str_replace("\\s*\\d{4}$", "")) %>%
+                   key = ~meta_key) %>%
     dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~Uke, ~Dag, ~Kl, ~everything())
 

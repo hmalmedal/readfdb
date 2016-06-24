@@ -18,7 +18,11 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
   if (unparsed) return(df)
 
   type <- unique(df$type)
-  subtype <- unique(df$subtype)
+  if ("subtype" %in% names(df)) {
+    subtype <- unique(df$subtype)
+  } else {
+    subtype <- NULL
+  }
 
   if (identical(type, "Variasjonskurver")) {
     if (identical(subtype, "D\u00f8gnvariasjon")) {

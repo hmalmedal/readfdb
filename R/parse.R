@@ -18,7 +18,7 @@ parse_csv_page <- function(csv_page) {
     dplyr::mutate_(value = ~stringr::str_replace_all(value, ",", "") %>%
                      as.numeric()) %>%
     dplyr::mutate_(~index_name, .dots = meta_dots) %>%
-    dplyr::select_(~index, ~index_name, ~everything())
+    dplyr::select_(~index, ~index_name, ~dplyr::everything())
 
   df
 }
@@ -43,8 +43,8 @@ parse_trafikkverdier <- function(df) {
                    index = ~factor(index, unique(index)),
                    Maanedsintervall = ~meta18 %>%
                      stringr::str_replace_all(" \\d{4}", "")) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~everything()) %>%
+    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~dplyr::everything()) %>%
     tidyr::spread_("index", "value")
 
   df <- df %>%
@@ -71,8 +71,8 @@ parse_produksjon <- function(df, total) {
                      factor(maaneder),
                    Dato = ~lubridate::make_datetime(Aar, Maaned) %>%
                      as.Date()) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
+    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~Maaned, ~dplyr::everything()) %>%
     tidyr::spread_("key", "value")
 
   df <- df %>%
@@ -100,8 +100,8 @@ parse_sonefordeling <- function(df, total) {
                      as.integer(),
                    Maanedsintervall = ~meta17 %>%
                      stringr::str_replace_all(" \\d{4}", "")) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~everything()) %>%
+    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~dplyr::everything()) %>%
     tidyr::spread_("key", "value")
 
   df <- df %>%

@@ -33,8 +33,8 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
                      as.integer(),
                    Kl = ~factor(Kl, kl),
                    key = ~meta_key) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Uke, ~Dag, ~Kl, ~everything())
+    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~Uke, ~Dag, ~Kl, ~dplyr::everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
   if (min_uke >= 52) warning("Check week!")
@@ -83,8 +83,8 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
                      stringr::str_extract("\\d{1,2}$") %>%
                      as.integer(),
                    Dag = ~factor(Dag, ukedager)) %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Uke, ~Dag, ~everything())
+    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~Uke, ~Dag, ~dplyr::everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
   if (min_uke >= 52) warning("Check week!")
@@ -136,8 +136,8 @@ parse_variasjonskurver_aarsvariasjon <- function(df, total) {
   }
 
   df <- df %>%
-    dplyr::select_(~-index_name, ~-matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Maaned, ~everything()) %>%
+    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select_(~Aar, ~Maaned, ~dplyr::everything()) %>%
     tidyr::spread_("key", "value") %>%
     dplyr::arrange_(~Dato)
 

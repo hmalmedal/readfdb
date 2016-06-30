@@ -10,20 +10,22 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
       dplyr::filter_(~index != "Total")
   }
 
-  meta_aar <- unique(df$meta19) %>%
+  meta_aar <- df$meta19 %>%
     stringr::str_extract("\\d{4}$") %>%
     as.integer()
 
-  if (is.na(meta_aar)) {
-    meta_aar <- unique(df$meta20) %>%
+  if (all(is.na(meta_aar))) {
+    meta_aar <- df$meta20 %>%
       stringr::str_extract("\\d{4}$") %>%
       as.integer()
-    meta_key <- unique(df$meta20) %>%
+    meta_key <- df$meta20 %>%
       stringr::str_replace("\\s*\\d{4}$", "")
   } else {
-    meta_key <- unique(df$meta19) %>%
+    meta_key <- df$meta19 %>%
       stringr::str_replace("\\s*\\d{4}$", "")
   }
+
+  if (any(is.na(meta_aar))) stop("Unknown error")
 
   df <- df %>%
     dplyr::rename_(Dag = ~key, Kl = ~index) %>%

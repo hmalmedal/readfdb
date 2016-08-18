@@ -1,7 +1,6 @@
 parse_trafikkindeks_aarsindeks <- function(df, total) {
   type <- unique(df$type)
   begrenset <- identical(type, "Begrenset trafikkindeks")
-  if (begrenset) df$meta18 <- NULL
 
   if (total) {
     df <- df %>%
@@ -57,7 +56,6 @@ parse_trafikkindeks_kvartalsindeks <- parse_trafikkindeks_aarsindeks
 parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   type <- unique(df$type)
   begrenset <- identical(type, "Begrenset trafikkindeks")
-  if (begrenset) df$meta18 <- NULL
 
   if (total) {
     df <- df %>%

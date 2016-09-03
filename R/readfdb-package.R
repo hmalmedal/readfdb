@@ -5,6 +5,8 @@
 #' @name readfdb
 #' @docType package
 #' @importFrom dplyr %>%
+#' @importFrom stats as.formula
+#' @importFrom utils read.csv
 NULL
 
 ukedager <- c("Man", "Tir", "Ons", "Tor", "Fre", "L\u00f8r", "S\u00f8n")

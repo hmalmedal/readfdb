@@ -24,7 +24,7 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
     subtype <- NULL
   }
 
-  if (identical(type, "Variasjonskurver")) {
+  if (stringr::str_detect(type, "^Variasjonskurver")) {
     if (identical(subtype, "D\u00f8gnvariasjon")) {
       df <- parse_variasjonskurver_dognvariasjon(df, total)
     } else if (identical(subtype, "Ukesvariasjon")) {

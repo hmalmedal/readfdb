@@ -126,15 +126,14 @@ parse_variasjonskurver_aarsvariasjon <- function(df, total) {
       dplyr::rename_(Aar = ~index) %>%
       dplyr::mutate_(Aar = ~as.integer(Aar),
                      Maaned = ~factor(NA, maaneder),
-                     Dato = ~lubridate::make_datetime(Aar) %>% as.Date())
+                     Dato = ~lubridate::make_date(Aar))
   } else {
     df <- df %>%
       dplyr::rename_(Maaned = ~index) %>%
       dplyr::mutate_(Aar = ~index_name %>%
                        as.integer(),
                      Maaned = ~factor(Maaned, maaneder),
-                     Dato = ~lubridate::make_datetime(Aar, Maaned) %>%
-                       as.Date())
+                     Dato = ~lubridate::make_date(Aar, Maaned))
   }
 
   df <- df %>%

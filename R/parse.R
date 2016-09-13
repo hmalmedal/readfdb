@@ -69,8 +69,7 @@ parse_produksjon <- function(df, total) {
                    Maaned = ~Maaned %>%
                      stringr::str_extract("^\\w{3}") %>%
                      factor(maaneder),
-                   Dato = ~lubridate::make_datetime(Aar, Maaned) %>%
-                     as.Date()) %>%
+                   Dato = ~lubridate::make_date(Aar, Maaned)) %>%
     dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
     dplyr::select_(~Aar, ~Maaned, ~dplyr::everything()) %>%
     tidyr::spread_("key", "value")

@@ -8,7 +8,7 @@ parse_csv_page <- function(csv_page) {
 
   df <- read.csv(text = csv_page, na.strings = "?", colClasses = "character",
                  skip = meta_length, check.names = FALSE, encoding = "UTF-8")
-  df <- dplyr::tbl_df(df[names(df) != ""])
+  df <- dplyr::as_data_frame(df[names(df) != ""])
 
   index_name <- names(df)[1]
   names(df)[1] <- "index"

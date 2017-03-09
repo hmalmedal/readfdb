@@ -51,7 +51,7 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
     df <- parse_trafikkverdier(df)
   } else if (identical(type, "Produksjon")) {
     df <- parse_produksjon(df, total)
-  } else if (identical(type, "Sonefordeling")) {
+  } else if (stringr::str_detect(type, "^Sonefordeling")) {
     df <- parse_sonefordeling(df, total)
   } else {
     warning("Unimplemented file type. Returning unparsed data frame.")

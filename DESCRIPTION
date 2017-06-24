@@ -18,4 +18,4 @@ Suggests:
     testthat
 URL: https://github.com/hmalmedal/readfdb
 BugReports: https://github.com/hmalmedal/readfdb/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

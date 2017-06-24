@@ -8,4 +8,15 @@
 \description{
 Read files from \href{http://fdb.triona.no/}{Ferjedatabanken}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/hmalmedal/readfdb}
+  \item Report bugs at \url{https://github.com/hmalmedal/readfdb/issues}
+}
 
+}
+\author{
+\strong{Maintainer}: Håkon Malmedal \email{hmalmedal@gmail.com}
+
+}

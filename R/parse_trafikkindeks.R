@@ -4,33 +4,36 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
 
   if (total) {
     df <- df %>%
-      dplyr::filter_(~index == "Total")
+      dplyr::filter(.data$index == "Total")
   } else {
     df <- df %>%
-      dplyr::filter_(~index != "Total")
+      dplyr::filter(.data$index != "Total")
   }
 
   df <- df %>%
-    dplyr::rename_(Maaned = ~index) %>%
-    dplyr::mutate_(Basisaar = ~index_name %>%
-                     stringr::str_extract("^\\d{4}") %>%
-                     as.integer(),
-                   Indeksaar = ~index_name %>%
-                     stringr::str_extract("\\d{4}$") %>%
-                     as.integer(),
-                   Maaned = ~factor(Maaned, maaneder),
-                   Basisdato = ~lubridate::make_date(Basisaar, Maaned),
-                   Indeksdato = ~lubridate::make_date(Indeksaar, Maaned))
+    dplyr::rename(Maaned = .data$index) %>%
+    dplyr::mutate(Basisaar = .data$index_name %>%
+                    stringr::str_extract("^\\d{4}") %>%
+                    as.integer(),
+                  Indeksaar = .data$index_name %>%
+                    stringr::str_extract("\\d{4}$") %>%
+                    as.integer(),
+                  Maaned = factor(.data$Maaned, maaneder),
+                  Basisdato = lubridate::make_date(.data$Basisaar,
+                                                   .data$Maaned),
+                  Indeksdato = lubridate::make_date(.data$Indeksaar,
+                                                    .data$Maaned))
 
   if (begrenset) {
     df <- df %>%
       tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
-      dplyr::mutate_(mvalue = ~readr::parse_number(mvalue))
+      dplyr::mutate(mvalue = readr::parse_number(.data$mvalue))
   }
 
   df <- df %>%
-    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Basisaar, ~Indeksaar, ~Maaned, ~dplyr::everything()) %>%
+    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
+                  dplyr::everything()) %>%
     tidyr::spread_("key", "value")
 
   if (begrenset) {
@@ -39,12 +42,12 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
   }
 
   df <- df %>%
-    dplyr::arrange_(~Basisdato)
+    dplyr::arrange(.data$Basisdato)
 
   df <- df %>%
-    dplyr::rename_("Basis\u00e5r" = ~Basisaar,
-                   "Indeks\u00e5r" = ~Indeksaar,
-                   "M\u00e5ned" = ~Maaned)
+    dplyr::rename("Basis\u00e5r" = .data$Basisaar,
+                  "Indeks\u00e5r" = .data$Indeksaar,
+                  "M\u00e5ned" = .data$Maaned)
 
   df
 }
@@ -57,30 +60,33 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
 
   if (total) {
     df <- df %>%
-      dplyr::filter_(~index == "Total")
+      dplyr::filter(.data$index == "Total")
   } else {
     df <- df %>%
-      dplyr::filter_(~index != "Total")
+      dplyr::filter(.data$index != "Total")
   }
 
   df <- df %>%
     tidyr::separate_("index", c("Maaned", "Basisaar", "Indeksaar"),
                      sep = " |/", extra = "drop") %>%
-    dplyr::mutate_(Maaned = ~factor(Maaned, maaneder),
-                   Basisaar = ~as.integer(Basisaar) + 2000,
-                   Indeksaar = ~as.integer(Indeksaar) + 2000,
-                   Basisdato = ~lubridate::make_date(Basisaar, Maaned),
-                   Indeksdato = ~lubridate::make_date(Indeksaar, Maaned))
+    dplyr::mutate(Maaned = factor(.data$Maaned, maaneder),
+                  Basisaar = as.integer(.data$Basisaar) + 2000,
+                  Indeksaar = as.integer(.data$Indeksaar) + 2000,
+                  Basisdato = lubridate::make_date(.data$Basisaar,
+                                                   .data$Maaned),
+                  Indeksdato = lubridate::make_date(.data$Indeksaar,
+                                                    .data$Maaned))
 
   if (begrenset) {
     df <- df %>%
       tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
-      dplyr::mutate_(mvalue = ~readr::parse_number(mvalue))
+      dplyr::mutate(mvalue = readr::parse_number(.data$mvalue))
   }
 
   df <- df %>%
-    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Basisaar, ~Indeksaar, ~Maaned, ~dplyr::everything()) %>%
+    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
+                  dplyr::everything()) %>%
     tidyr::spread_("key", "value")
 
   if (begrenset) {
@@ -89,12 +95,12 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   }
 
   df <- df %>%
-    dplyr::arrange_(~Basisdato)
+    dplyr::arrange(.data$Basisdato)
 
   df <- df %>%
-    dplyr::rename_("Basis\u00e5r" = ~Basisaar,
-                   "Indeks\u00e5r" = ~Indeksaar,
-                   "M\u00e5ned" = ~Maaned)
+    dplyr::rename("Basis\u00e5r" = .data$Basisaar,
+                  "Indeks\u00e5r" = .data$Indeksaar,
+                  "M\u00e5ned" = .data$Maaned)
 
   df
 }

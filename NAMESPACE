@@ -2,5 +2,5 @@
 
 export(read_fdb_csv)
 importFrom(dplyr,"%>%")
-importFrom(stats,as.formula)
+importFrom(rlang,.data)
 importFrom(utils,read.csv)

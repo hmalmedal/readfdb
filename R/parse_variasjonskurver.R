@@ -4,10 +4,10 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
 
   if (total) {
     df <- df %>%
-      dplyr::filter_(~index == "Total")
+      dplyr::filter(.data$index == "Total")
   } else {
     df <- df %>%
-      dplyr::filter_(~index != "Total")
+      dplyr::filter(.data$index != "Total")
   }
 
   meta_aar <- df$meta19 %>%
@@ -28,15 +28,16 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
   if (any(is.na(meta_aar))) stop("Unknown error")
 
   df <- df %>%
-    dplyr::rename_(Dag = ~key, Kl = ~index) %>%
-    dplyr::mutate_(Aar = ~meta_aar,
-                   Uke = ~index_name %>%
-                     stringr::str_extract("\\d{1,2}$") %>%
-                     as.integer(),
-                   Kl = ~factor(Kl, kl),
-                   key = ~meta_key) %>%
-    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Uke, ~Dag, ~Kl, ~dplyr::everything())
+    dplyr::rename(Dag = .data$key, Kl = .data$index) %>%
+    dplyr::mutate(Aar = meta_aar,
+                  Uke = .data$index_name %>%
+                    stringr::str_extract("\\d{1,2}$") %>%
+                    as.integer(),
+                  Kl = factor(.data$Kl, kl),
+                  key = meta_key) %>%
+    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Aar, .data$Uke, .data$Dag, .data$Kl,
+                  dplyr::everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
   if (min_uke >= 52) warning("Check week!")
@@ -55,38 +56,38 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
 
   if (total) {
     df <- df %>%
-      dplyr::mutate_(Tid = ~mandag + dager)
+      dplyr::mutate(Tid = mandag + dager)
   } else {
     df <- df %>%
-      dplyr::mutate_(Tid = ~mandag + timer)
+      dplyr::mutate(Tid = mandag + timer)
   }
 
   df <- df %>%
-    dplyr::mutate_(Dato = ~as.Date(Tid),
-                   Ukedato = ~ISOweek::date2ISOweek(Dato)) %>%
-    dplyr::filter_(~lubridate::year(Dato) == aar) %>%
+    dplyr::mutate(Dato = as.Date(.data$Tid),
+                  Ukedato = ISOweek::date2ISOweek(.data$Dato)) %>%
+    dplyr::filter(lubridate::year(.data$Dato) == aar) %>%
     tidyr::spread_("key", "value") %>%
-    dplyr::arrange_(~Tid)
+    dplyr::arrange(.data$Tid)
 
   df <- df %>%
-    dplyr::rename_("\u00c5r" = ~Aar)
+    dplyr::rename("\u00c5r" = .data$Aar)
 
   df
 }
 
 parse_variasjonskurver_ukesvariasjon <- function(df) {
   df <- df %>%
-    dplyr::filter_(~index != "Total") %>%
-    dplyr::rename_(Dag = ~index) %>%
-    dplyr::mutate_(Aar = ~index_name %>%
-                     stringr::str_extract("^\\d{4}") %>%
-                     as.integer(),
-                   Uke = ~index_name %>%
-                     stringr::str_extract("\\d{1,2}$") %>%
-                     as.integer(),
-                   Dag = ~factor(Dag, ukedager)) %>%
-    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Uke, ~Dag, ~dplyr::everything())
+    dplyr::filter(.data$index != "Total") %>%
+    dplyr::rename(Dag = .data$index) %>%
+    dplyr::mutate(Aar = .data$index_name %>%
+                    stringr::str_extract("^\\d{4}") %>%
+                    as.integer(),
+                  Uke = .data$index_name %>%
+                    stringr::str_extract("\\d{1,2}$") %>%
+                    as.integer(),
+                  Dag = factor(.data$Dag, ukedager)) %>%
+    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Aar, .data$Uke, .data$Dag, dplyr::everything())
 
   min_uke <- min(df$Uke[df$Uke > 1])
   if (min_uke >= 52) warning("Check week!")
@@ -97,17 +98,17 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
     ISOweek::ISOweek2date()
 
   df <- df %>%
-    dplyr::group_by_(~key) %>%
-    dplyr::mutate_(Dato = ~mandag +
-                     lubridate::days(seq_along(Uke) -
-                                       min(which(Uke == min_uke))),
-                   Ukedato = ~ISOweek::date2ISOweek(Dato)) %>%
+    dplyr::group_by(.data$key) %>%
+    dplyr::mutate(Dato = mandag +
+                    lubridate::days(seq_along(.data$Uke) -
+                                      min(which(.data$Uke == min_uke))),
+                  Ukedato = ISOweek::date2ISOweek(.data$Dato)) %>%
     dplyr::ungroup() %>%
     tidyr::spread_("key", "value") %>%
-    dplyr::arrange_(~Dato)
+    dplyr::arrange(.data$Dato)
 
   df <- df %>%
-    dplyr::rename_("\u00c5r" = ~Aar)
+    dplyr::rename("\u00c5r" = .data$Aar)
 
   df
 }
@@ -115,36 +116,36 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
 parse_variasjonskurver_aarsvariasjon <- function(df, total) {
   if (total) {
     df <- df %>%
-      dplyr::filter_(~index == "Total")
+      dplyr::filter(.data$index == "Total")
   } else {
     df <- df %>%
-      dplyr::filter_(~index != "Total")
+      dplyr::filter(.data$index != "Total")
   }
 
   if (identical(unique(df$index_name), "\u00c5r")) {
     df <- df %>%
-      dplyr::rename_(Aar = ~index) %>%
-      dplyr::mutate_(Aar = ~as.integer(Aar),
-                     Maaned = ~factor(NA, maaneder),
-                     Dato = ~lubridate::make_date(Aar))
+      dplyr::rename(Aar = .data$index) %>%
+      dplyr::mutate(Aar = as.integer(.data$Aar),
+                    Maaned = factor(NA, maaneder),
+                    Dato = lubridate::make_date(.data$Aar))
   } else {
     df <- df %>%
-      dplyr::rename_(Maaned = ~index) %>%
-      dplyr::mutate_(Aar = ~index_name %>%
-                       as.integer(),
-                     Maaned = ~factor(Maaned, maaneder),
-                     Dato = ~lubridate::make_date(Aar, Maaned))
+      dplyr::rename(Maaned = .data$index) %>%
+      dplyr::mutate(Aar = .data$index_name %>%
+                      as.integer(),
+                    Maaned = factor(.data$Maaned, maaneder),
+                    Dato = lubridate::make_date(.data$Aar, .data$Maaned))
   }
 
   df <- df %>%
-    dplyr::select_(~-index_name, ~-dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select_(~Aar, ~Maaned, ~dplyr::everything()) %>%
+    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Aar, .data$Maaned, dplyr::everything()) %>%
     tidyr::spread_("key", "value") %>%
-    dplyr::arrange_(~Dato)
+    dplyr::arrange(.data$Dato)
 
   df <- df %>%
-    dplyr::rename_("\u00c5r" = ~Aar,
-                   "M\u00e5ned" = ~Maaned)
+    dplyr::rename("\u00c5r" = .data$Aar,
+                  "M\u00e5ned" = .data$Maaned)
 
   df
 }

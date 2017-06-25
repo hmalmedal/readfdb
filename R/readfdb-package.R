@@ -3,8 +3,8 @@
 #' Read files from \href{http://fdb.triona.no/}{Ferjedatabanken}.
 #'
 #' @importFrom dplyr %>%
-#' @importFrom stats as.formula
 #' @importFrom utils read.csv
+#' @importFrom rlang .data
 "_PACKAGE"
 
 ukedager <- c("Man", "Tir", "Ons", "Tor", "Fre", "L\u00f8r", "S\u00f8n")

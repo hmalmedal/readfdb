@@ -3,7 +3,7 @@ parse_csv_page <- function(csv_page) {
 
   meta_length <- 7
 
-  meta_df <- parse_meta(csv_page, meta_length)
+  meta <- parse_meta(csv_page, meta_length)
 
   df <- read.csv(text = csv_page, na.strings = "?", colClasses = "character",
                  skip = meta_length, check.names = FALSE, encoding = "UTF-8")
@@ -16,7 +16,7 @@ parse_csv_page <- function(csv_page) {
     tidyr::gather_("key", "value", names(df)[-1], factor_key = TRUE) %>%
     dplyr::mutate(value = stringr::str_replace_all(.data$value, ",", "") %>%
                     as.numeric()) %>%
-    dplyr::mutate(index_name, !!!meta_df) %>%
+    dplyr::mutate(index_name, !!!meta) %>%
     dplyr::select(.data$index, .data$index_name, dplyr::everything())
 
   df
@@ -32,17 +32,14 @@ parse_meta <- function(csv_page, meta_length) {
 
   Encoding(meta) <- "UTF-8"
 
-  meta_df <- t(meta) %>%
-    dplyr::as_data_frame()
-
-  names(meta_df) <- stringr::str_c("meta", seq_along(meta))
-  names(meta_df)[1:2] <- c("type", "subtype")
+  names(meta) <- stringr::str_c("meta", seq_along(meta))
+  names(meta)[1:2] <- c("type", "subtype")
 
   i <- which(stringr::str_detect(meta, ":$"))
-  names(meta_df)[i + 1] <- stringr::str_replace(meta[i], ":$", "")
-  meta_df <- meta_df[-i]
+  names(meta)[i + 1] <- stringr::str_replace(meta[i], ":$", "")
+  meta <- meta[-i]
 
-  meta_df
+  meta
 }
 
 parse_trafikkverdier <- function(df) {

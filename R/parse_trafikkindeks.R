@@ -26,7 +26,7 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
 
   if (begrenset) {
     df <- df %>%
-      tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
+      tidyr::separate(.data$meta17, c("mkey", "mvalue"), sep = ": ") %>%
       dplyr::mutate(mvalue = readr::parse_number(.data$mvalue))
   }
 
@@ -34,11 +34,11 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
     dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
                   dplyr::everything()) %>%
-    tidyr::spread_("key", "value")
+    tidyr::spread(.data$key, .data$value)
 
   if (begrenset) {
     df <- df %>%
-      tidyr::spread_("mkey", "mvalue")
+      tidyr::spread(.data$mkey, .data$mvalue)
   }
 
   df <- df %>%
@@ -67,7 +67,7 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   }
 
   df <- df %>%
-    tidyr::separate_("index", c("Maaned", "Basisaar", "Indeksaar"),
+    tidyr::separate(.data$index, c("Maaned", "Basisaar", "Indeksaar"),
                      sep = " |/", extra = "drop") %>%
     dplyr::mutate(Maaned = factor(.data$Maaned, maaneder),
                   Basisaar = as.integer(.data$Basisaar) + 2000,
@@ -79,7 +79,7 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
 
   if (begrenset) {
     df <- df %>%
-      tidyr::separate_("meta17", c("mkey", "mvalue"), sep = ": ") %>%
+      tidyr::separate(.data$meta17, c("mkey", "mvalue"), sep = ": ") %>%
       dplyr::mutate(mvalue = readr::parse_number(.data$mvalue))
   }
 
@@ -87,11 +87,11 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
     dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
                   dplyr::everything()) %>%
-    tidyr::spread_("key", "value")
+    tidyr::spread(.data$key, .data$value)
 
   if (begrenset) {
     df <- df %>%
-      tidyr::spread_("mkey", "mvalue")
+      tidyr::spread(.data$mkey, .data$mvalue)
   }
 
   df <- df %>%

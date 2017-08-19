@@ -66,7 +66,7 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
     dplyr::mutate(Dato = as.Date(.data$Tid),
                   Ukedato = ISOweek::date2ISOweek(.data$Dato)) %>%
     dplyr::filter(lubridate::year(.data$Dato) == aar) %>%
-    tidyr::spread_("key", "value") %>%
+    tidyr::spread(.data$key, .data$value) %>%
     dplyr::arrange(.data$Tid)
 
   df <- df %>%
@@ -104,7 +104,7 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
                                       min(which(.data$Uke == min_uke))),
                   Ukedato = ISOweek::date2ISOweek(.data$Dato)) %>%
     dplyr::ungroup() %>%
-    tidyr::spread_("key", "value") %>%
+    tidyr::spread(.data$key, .data$value) %>%
     dplyr::arrange(.data$Dato)
 
   df <- df %>%
@@ -140,7 +140,7 @@ parse_variasjonskurver_aarsvariasjon <- function(df, total) {
   df <- df %>%
     dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, .data$Maaned, dplyr::everything()) %>%
-    tidyr::spread_("key", "value") %>%
+    tidyr::spread(.data$key, .data$value) %>%
     dplyr::arrange(.data$Dato)
 
   df <- df %>%

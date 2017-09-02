@@ -10,10 +10,12 @@ Imports:
     forcats (>= 0.2.0),
     ISOweek,
     lubridate (>= 1.6.0),
+    magrittr,
     purrr,
     readr (>= 0.2.1),
     rlang,
     stringr,
+    tibble,
     tidyr (>= 0.7.0)
 Suggests:
     testthat

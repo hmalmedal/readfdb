@@ -13,7 +13,7 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
     stringr::str_split("\n[^\n]*Side \\d[^\n]*\n") %>%
     purrr::flatten_chr()
 
-  df <- purrr::map_df(csv_pages, parse_csv_page)
+  df <- purrr::map_dfr(csv_pages, parse_csv_page)
 
   if (unparsed) return(df)
 

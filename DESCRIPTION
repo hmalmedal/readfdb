@@ -11,7 +11,7 @@ Imports:
     ISOweek,
     lubridate (>= 1.6.0),
     magrittr,
-    purrr,
+    purrr (>= 0.2.3),
     readr (>= 0.2.1),
     rlang,
     stringr,

@@ -16,8 +16,7 @@ parse_csv_page <- function(csv_page) {
     tidyr::gather("key", "value", -1, factor_key = TRUE) %>%
     dplyr::mutate(value = stringr::str_replace_all(.data$value, ",", "") %>%
                     as.numeric()) %>%
-    dplyr::mutate(index_name, !!!meta) %>%
-    dplyr::select(.data$index, .data$index_name, dplyr::everything())
+    dplyr::mutate(index_name, !!!meta)
 
   df
 }

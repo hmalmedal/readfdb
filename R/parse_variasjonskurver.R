@@ -51,18 +51,21 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
   attr(mandag, "tzone") <- "UTC"
 
   i <- min(which(df$Uke == min_uke))
-  timer <- lubridate::hours(seq_along(df$Uke) - i)
-  dager <- lubridate::days(seq_along(df$Uke) - i)
 
   if (total) {
     df <- df %>%
-      dplyr::mutate(Tid = mandag + dager)
+      dplyr::group_by(.data$Fra, .data$Til) %>%
+      dplyr::mutate(Tid = mandag +
+                      lubridate::days(seq_along(.data$Uke) - i))
   } else {
     df <- df %>%
-      dplyr::mutate(Tid = mandag + timer)
+      dplyr::group_by(.data$Fra, .data$Til) %>%
+      dplyr::mutate(Tid = mandag +
+                      lubridate::hours(seq_along(.data$Uke) - i))
   }
 
   df <- df %>%
+    dplyr::ungroup() %>%
     dplyr::mutate(Dato = as.Date(.data$Tid),
                   Ukedato = ISOweek::date2ISOweek(.data$Dato)) %>%
     dplyr::filter(lubridate::year(.data$Dato) == aar) %>%

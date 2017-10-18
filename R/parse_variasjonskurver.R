@@ -98,7 +98,7 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
     ISOweek::ISOweek2date()
 
   df <- df %>%
-    dplyr::group_by(.data$key) %>%
+    dplyr::group_by(.data$key, .data$Fra, .data$Til) %>%
     dplyr::mutate(Dato = mandag +
                     lubridate::days(seq_along(.data$Uke) -
                                       min(which(.data$Uke == min_uke))),

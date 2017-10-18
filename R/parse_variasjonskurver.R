@@ -119,7 +119,8 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
 parse_variasjonskurver_aarsvariasjon <- function(df, total) {
   if (total) {
     df <- df %>%
-      dplyr::filter(.data$index == "Total")
+      dplyr::filter(.data$index == "Total") %>%
+      dplyr::mutate(index = NA)
   } else {
     df <- df %>%
       dplyr::filter(.data$index != "Total")

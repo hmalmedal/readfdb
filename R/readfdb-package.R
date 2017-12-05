@@ -2,6 +2,8 @@
 #'
 #' Read files from \href{http://fdb.triona.no/}{Ferjedatabanken}.
 #'
+#' @keywords package
+#'
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
 #' @importFrom rlang .data

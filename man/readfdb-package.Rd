@@ -20,3 +20,4 @@ Useful links:
 \strong{Maintainer}: Håkon Malmedal \email{hmalmedal@gmail.com}
 
 }
+\keyword{package}

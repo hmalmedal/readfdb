@@ -5,7 +5,8 @@ Authors@R: person("Håkon", "Malmedal",
                   email = "hmalmedal@gmail.com", role = c("aut", "cre"))
 Description: Read files from 'Ferjedatabanken'.
 License: GPL (>= 3)
-Encoding: UTF-8
+URL: https://github.com/hmalmedal/readfdb
+BugReports: https://github.com/hmalmedal/readfdb/issues
 Imports:
     dplyr (>= 0.7.1),
     forcats (>= 0.2.0),
@@ -20,6 +21,5 @@ Imports:
     tidyr (>= 0.7.0)
 Suggests:
     testthat
-URL: https://github.com/hmalmedal/readfdb
-BugReports: https://github.com/hmalmedal/readfdb/issues
+Encoding: UTF-8
 RoxygenNote: 6.0.1

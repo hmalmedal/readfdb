@@ -14,7 +14,7 @@ parse_csv_page <- function(csv_page) {
 
   df <- df %>%
     tidyr::gather("key", "value", -1, factor_key = TRUE) %>%
-    dplyr::mutate(value = stringr::str_replace_all(.data$value, ",", "") %>%
+    dplyr::mutate(value = stringr::str_remove_all(.data$value, ",") %>%
                     as.numeric()) %>%
     dplyr::mutate(index_name, !!!meta)
 
@@ -35,7 +35,7 @@ parse_meta <- function(csv_page, meta_length) {
   names(meta)[1:2] <- c("type", "subtype")
 
   i <- which(stringr::str_detect(meta, ":$"))
-  names(meta)[i + 1] <- stringr::str_replace(meta[i], ":$", "")
+  names(meta)[i + 1] <- stringr::str_remove(meta[i], ":$")
   meta <- meta[-i]
 
   meta
@@ -47,7 +47,7 @@ parse_trafikkverdier <- function(df) {
     dplyr::mutate(Aar = as.integer(.data$index_name),
                   index = forcats::as_factor(.data$index),
                   Maanedsintervall = .data$meta18 %>%
-                    stringr::str_replace_all(" \\d{4}", "")) %>%
+                    stringr::str_remove_all(" \\d{4}")) %>%
     dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, dplyr::everything()) %>%
     tidyr::spread(.data$index, .data$value)
@@ -103,7 +103,7 @@ parse_sonefordeling <- function(df, total) {
                     stringr::str_extract("\\d{4}") %>%
                     as.integer(),
                   Maanedsintervall = .data$meta17 %>%
-                    stringr::str_replace_all(" \\d{4}", "")) %>%
+                    stringr::str_remove_all(" \\d{4}")) %>%
     dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, dplyr::everything()) %>%
     tidyr::spread(.data$key, .data$value)

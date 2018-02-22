@@ -19,10 +19,10 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
       stringr::str_extract("\\d{4}$") %>%
       as.integer()
     meta_key <- df$meta20 %>%
-      stringr::str_replace("\\s*\\d{4}$", "")
+      stringr::str_remove("\\s*\\d{4}$")
   } else {
     meta_key <- df$meta19 %>%
-      stringr::str_replace("\\s*\\d{4}$", "")
+      stringr::str_remove("\\s*\\d{4}$")
   }
 
   if (any(is.na(meta_aar))) stop("Unknown error")

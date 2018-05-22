@@ -31,9 +31,9 @@ parse_trafikkindeks_aarsindeks <- function(df, total) {
   }
 
   df <- df %>%
-    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
-                  dplyr::everything()) %>%
+                  everything()) %>%
     tidyr::spread(.data$key, .data$value)
 
   if (begrenset) {
@@ -84,9 +84,9 @@ parse_trafikkindeks_siste_12_maaneder <- function(df, total) {
   }
 
   df <- df %>%
-    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
-                  dplyr::everything()) %>%
+                  everything()) %>%
     tidyr::spread(.data$key, .data$value)
 
   if (begrenset) {

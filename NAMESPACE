@@ -3,4 +3,6 @@
 export(read_fdb_csv)
 importFrom(magrittr,"%>%")
 importFrom(rlang,.data)
+importFrom(tidyselect,everything)
+importFrom(tidyselect,matches)
 importFrom(utils,read.csv)

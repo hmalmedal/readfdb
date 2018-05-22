@@ -48,8 +48,8 @@ parse_trafikkverdier <- function(df) {
                   index = forcats::as_factor(.data$index),
                   Maanedsintervall = .data$meta18 %>%
                     stringr::str_remove_all(" \\d{4}")) %>%
-    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select(.data$Aar, dplyr::everything()) %>%
+    dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Aar, everything()) %>%
     tidyr::spread(.data$index, .data$value)
 
   df <- df %>%
@@ -75,8 +75,8 @@ parse_produksjon <- function(df, total) {
                     stringr::str_extract("^\\w{3}") %>%
                     factor(maaneder),
                   Dato = lubridate::make_date(.data$Aar, .data$Maaned)) %>%
-    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select(.data$Aar, .data$Maaned, dplyr::everything()) %>%
+    dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Aar, .data$Maaned, everything()) %>%
     tidyr::spread(.data$key, .data$value)
 
   df <- df %>%
@@ -104,8 +104,8 @@ parse_sonefordeling <- function(df, total) {
                     as.integer(),
                   Maanedsintervall = .data$meta17 %>%
                     stringr::str_remove_all(" \\d{4}")) %>%
-    dplyr::select(-.data$index_name, -dplyr::matches("^meta|^(sub)?type$")) %>%
-    dplyr::select(.data$Aar, dplyr::everything()) %>%
+    dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
+    dplyr::select(.data$Aar, everything()) %>%
     tidyr::spread(.data$key, .data$value)
 
   df <- df %>%

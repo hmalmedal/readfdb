@@ -7,6 +7,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom utils read.csv
 #' @importFrom rlang .data
+#' @importFrom tidyselect matches everything
 "_PACKAGE"
 
 ukedager <- c("Man", "Tir", "Ons", "Tor", "Fre", "L\u00f8r", "S\u00f8n")

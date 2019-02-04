@@ -1,6 +1,6 @@
 #' Read FDB Files
 #'
-#' Read files from \href{http://fdb.triona.no/}{Ferjedatabanken}.
+#' Read files from [Ferjedatabanken](http://fdb.triona.no/).
 #'
 #' @keywords package
 #'

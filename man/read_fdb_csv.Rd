@@ -7,7 +7,7 @@
 read_fdb_csv(file, total = FALSE, unparsed = FALSE)
 }
 \arguments{
-\item{file}{Path to file. See \code{\link[readr]{read_file}} for details.}
+\item{file}{Path to file. See \code{\link[readr:read_file]{readr::read_file()}} for details.}
 
 \item{total}{Extract total values.}
 

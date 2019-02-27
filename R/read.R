@@ -13,49 +13,49 @@ read_fdb_csv <- function(file, total = FALSE, unparsed = FALSE) {
     stringr::str_split("\n[^\n]*Side \\d[^\n]*\n") %>%
     purrr::flatten_chr()
 
-  df <- purrr::map_dfr(csv_pages, parse_csv_page)
+  d <- purrr::map_dfr(csv_pages, parse_csv_page)
 
-  if (unparsed) return(df)
+  if (unparsed) return(d)
 
-  type <- unique(df$type)
-  if ("subtype" %in% names(df)) {
-    subtype <- unique(df$subtype)
+  type <- unique(d$type)
+  if ("subtype" %in% names(d)) {
+    subtype <- unique(d$subtype)
   } else {
     subtype <- NULL
   }
 
   if (stringr::str_detect(type, "^Variasjonskurver")) {
     if (identical(subtype, "D\u00f8gnvariasjon")) {
-      df <- parse_variasjonskurver_dognvariasjon(df, total)
+      d <- parse_variasjonskurver_dognvariasjon(d, total)
     } else if (identical(subtype, "Ukesvariasjon")) {
       if (total) warning("Parameter \"total\" not implemented.")
-      df <- parse_variasjonskurver_ukesvariasjon(df)
+      d <- parse_variasjonskurver_ukesvariasjon(d)
     } else if (identical(subtype, "\u00c5rsvariasjon")) {
-      df <- parse_variasjonskurver_aarsvariasjon(df, total)
+      d <- parse_variasjonskurver_aarsvariasjon(d, total)
     } else {
       stop("Unknown error.")
     }
   } else if (identical(type, "Trafikkindeks") ||
              identical(type, "Begrenset trafikkindeks")) {
     if (identical(subtype, "\u00c5rsindeks")) {
-      df <- parse_trafikkindeks_aarsindeks(df, total)
+      d <- parse_trafikkindeks_aarsindeks(d, total)
     } else if (identical(subtype, "Kvartalsindeks")) {
-      df <- parse_trafikkindeks_kvartalsindeks(df, total)
+      d <- parse_trafikkindeks_kvartalsindeks(d, total)
     } else if (identical(subtype, "Siste 12 m\u00e5neder")) {
-      df <- parse_trafikkindeks_siste_12_maaneder(df, total)
+      d <- parse_trafikkindeks_siste_12_maaneder(d, total)
     } else {
       stop("Unknown error.")
     }
   } else if (identical(type, "Trafikkverdier")) {
     if (total) warning("Parameter \"total\" ignored.")
-    df <- parse_trafikkverdier(df)
+    d <- parse_trafikkverdier(d)
   } else if (identical(type, "Produksjon")) {
-    df <- parse_produksjon(df, total)
+    d <- parse_produksjon(d, total)
   } else if (stringr::str_detect(type, "^Sonefordeling")) {
-    df <- parse_sonefordeling(df, total)
+    d <- parse_sonefordeling(d, total)
   } else {
     warning("Unimplemented file type. Returning unparsed data frame.")
   }
 
-  df
+  d
 }

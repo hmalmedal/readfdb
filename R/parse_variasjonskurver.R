@@ -1,33 +1,33 @@
-parse_variasjonskurver_dognvariasjon <- function(df, total) {
+parse_variasjonskurver_dognvariasjon <- function(d, total) {
   kl <- stringr::str_pad(0:24, 2, pad = "0")
   kl <- stringr::str_c(kl[-25], kl[-1], sep = "-")
 
   if (total) {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index == "Total")
   } else {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index != "Total")
   }
 
-  meta_aar <- df$meta19 %>%
+  meta_aar <- d$meta19 %>%
     stringr::str_extract("\\d{4}$") %>%
     as.integer()
 
   if (all(is.na(meta_aar))) {
-    meta_aar <- df$meta20 %>%
+    meta_aar <- d$meta20 %>%
       stringr::str_extract("\\d{4}$") %>%
       as.integer()
-    meta_key <- df$meta20 %>%
+    meta_key <- d$meta20 %>%
       stringr::str_remove("\\s*\\d{4}$")
   } else {
-    meta_key <- df$meta19 %>%
+    meta_key <- d$meta19 %>%
       stringr::str_remove("\\s*\\d{4}$")
   }
 
   if (any(is.na(meta_aar))) stop("Unknown error")
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename(Dag = .data$key, Kl = .data$index) %>%
     dplyr::mutate(Aar = meta_aar,
                   Uke = .data$index_name %>%
@@ -38,9 +38,9 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, .data$Uke, .data$Dag, .data$Kl, everything())
 
-  min_uke <- min(df$Uke[df$Uke > 1])
+  min_uke <- min(d$Uke[d$Uke > 1])
   if (min_uke >= 52) warning("Check week!")
-  aar <- df$Aar[1]
+  aar <- d$Aar[1]
 
   min_uke0 <- stringr::str_pad(min_uke, 2, pad = "0")
 
@@ -49,21 +49,21 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
     as.POSIXct()
   attr(mandag, "tzone") <- "UTC"
 
-  i <- min(which(df$Uke == min_uke))
+  i <- min(which(d$Uke == min_uke))
 
   if (total) {
-    df <- df %>%
+    d <- d %>%
       dplyr::group_by(.data$Fra, .data$Til) %>%
       dplyr::mutate(Tid = mandag +
                       lubridate::days(seq_along(.data$Uke) - i))
   } else {
-    df <- df %>%
+    d <- d %>%
       dplyr::group_by(.data$Fra, .data$Til) %>%
       dplyr::mutate(Tid = mandag +
                       lubridate::hours(seq_along(.data$Uke) - i))
   }
 
-  df <- df %>%
+  d <- d %>%
     dplyr::ungroup() %>%
     dplyr::mutate(Dato = as.Date(.data$Tid),
                   Ukedato = ISOweek::date2ISOweek(.data$Dato)) %>%
@@ -71,14 +71,14 @@ parse_variasjonskurver_dognvariasjon <- function(df, total) {
     tidyr::spread(.data$key, .data$value) %>%
     dplyr::arrange(.data$Tid)
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar)
 
-  df
+  d
 }
 
-parse_variasjonskurver_ukesvariasjon <- function(df) {
-  df <- df %>%
+parse_variasjonskurver_ukesvariasjon <- function(d) {
+  d <- d %>%
     dplyr::filter(.data$index != "Total") %>%
     dplyr::rename(Dag = .data$index) %>%
     dplyr::mutate(Aar = .data$index_name %>%
@@ -91,15 +91,15 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, .data$Uke, .data$Dag, everything())
 
-  min_uke <- min(df$Uke[df$Uke > 1])
+  min_uke <- min(d$Uke[d$Uke > 1])
   if (min_uke >= 52) warning("Check week!")
-  aar <- df$Aar[1]
+  aar <- d$Aar[1]
 
   min_uke0 <- stringr::str_pad(min_uke, 2, pad = "0")
   mandag <- stringr::str_c(aar, "-W", min_uke0, "-1") %>%
     ISOweek::ISOweek2date()
 
-  df <- df %>%
+  d <- d %>%
     dplyr::group_by(.data$key, .data$Fra, .data$Til) %>%
     dplyr::mutate(Dato = mandag +
                     lubridate::days(seq_along(.data$Uke) -
@@ -109,30 +109,30 @@ parse_variasjonskurver_ukesvariasjon <- function(df) {
     tidyr::spread(.data$key, .data$value) %>%
     dplyr::arrange(.data$Dato)
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar)
 
-  df
+  d
 }
 
-parse_variasjonskurver_aarsvariasjon <- function(df, total) {
+parse_variasjonskurver_aarsvariasjon <- function(d, total) {
   if (total) {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index == "Total") %>%
       dplyr::mutate(index = NA)
   } else {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index != "Total")
   }
 
-  if (identical(unique(df$index_name), "\u00c5r")) {
-    df <- df %>%
+  if (identical(unique(d$index_name), "\u00c5r")) {
+    d <- d %>%
       dplyr::rename(Aar = .data$index) %>%
       dplyr::mutate(Aar = as.integer(.data$Aar),
                     Maaned = factor(NA, maaneder),
                     Dato = lubridate::make_date(.data$Aar))
   } else {
-    df <- df %>%
+    d <- d %>%
       dplyr::rename(Maaned = .data$index) %>%
       dplyr::mutate(Aar = .data$index_name %>%
                       as.integer(),
@@ -140,15 +140,15 @@ parse_variasjonskurver_aarsvariasjon <- function(df, total) {
                     Dato = lubridate::make_date(.data$Aar, .data$Maaned))
   }
 
-  df <- df %>%
+  d <- d %>%
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, .data$Maaned, everything()) %>%
     tidyr::spread(.data$key, .data$value) %>%
     dplyr::arrange(.data$Dato)
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
                   "M\u00e5ned" = .data$Maaned)
 
-  df
+  d
 }

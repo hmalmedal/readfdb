@@ -5,20 +5,20 @@ parse_csv_page <- function(csv_page) {
 
   meta <- parse_meta(csv_page, meta_length)
 
-  df <- read.csv(text = csv_page, na.strings = "?", colClasses = "character",
-                 skip = meta_length, check.names = FALSE, encoding = "UTF-8")
-  df <- tibble::as_tibble(df[names(df) != ""])
+  d <- read.csv(text = csv_page, na.strings = "?", colClasses = "character",
+                skip = meta_length, check.names = FALSE, encoding = "UTF-8")
+  d <- tibble::as_tibble(d[names(d) != ""])
 
-  index_name <- names(df)[1]
-  names(df)[1] <- "index"
+  index_name <- names(d)[1]
+  names(d)[1] <- "index"
 
-  df <- df %>%
+  d <- d %>%
     tidyr::gather("key", "value", -1, factor_key = TRUE) %>%
     dplyr::mutate(value = stringr::str_remove_all(.data$value, ",") %>%
                     as.numeric()) %>%
     dplyr::mutate(index_name, !!!meta)
 
-  df
+  d
 }
 
 parse_meta <- function(csv_page, meta_length) {
@@ -41,8 +41,8 @@ parse_meta <- function(csv_page, meta_length) {
   meta
 }
 
-parse_trafikkverdier <- function(df) {
-  df <- df %>%
+parse_trafikkverdier <- function(d) {
+  d <- d %>%
     dplyr::rename(Trafikktype = .data$key) %>%
     dplyr::mutate(Aar = as.integer(.data$index_name),
                   index = forcats::as_factor(.data$index),
@@ -52,23 +52,23 @@ parse_trafikkverdier <- function(df) {
     dplyr::select(.data$Aar, everything()) %>%
     tidyr::spread(.data$index, .data$value)
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
                   "M\u00e5nedsintervall" = .data$Maanedsintervall)
 
-  df
+  d
 }
 
-parse_produksjon <- function(df, total) {
+parse_produksjon <- function(d, total) {
   if (total) {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index == "Total")
   } else {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index != "Total")
   }
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename(Maaned = .data$index) %>%
     dplyr::mutate(Aar = as.integer(.data$index_name),
                   Maaned = .data$Maaned %>%
@@ -79,24 +79,24 @@ parse_produksjon <- function(df, total) {
     dplyr::select(.data$Aar, .data$Maaned, everything()) %>%
     tidyr::spread(.data$key, .data$value)
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
                   "M\u00e5ned" = .data$Maaned)
 
-  df
+  d
 }
 
-parse_sonefordeling <- function(df, total) {
+parse_sonefordeling <- function(d, total) {
   if (total) {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index == "Total") %>%
       dplyr::mutate(index = NA)
   } else {
-    df <- df %>%
+    d <- d %>%
       dplyr::filter(.data$index != "Total")
   }
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename(Sone = .data$index) %>%
     dplyr::mutate(Sone = as.integer(.data$Sone),
                   Aar = .data$meta17 %>%
@@ -108,9 +108,9 @@ parse_sonefordeling <- function(df, total) {
     dplyr::select(.data$Aar, everything()) %>%
     tidyr::spread(.data$key, .data$value)
 
-  df <- df %>%
+  d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
                   "M\u00e5nedsintervall" = .data$Maanedsintervall)
 
-  df
+  d
 }

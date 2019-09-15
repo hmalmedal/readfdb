@@ -34,11 +34,11 @@ parse_trafikkindeks_aarsindeks <- function(d, total) {
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
                   everything()) %>%
-    tidyr::spread(.data$key, .data$value)
+    tidyr::pivot_wider(names_from = .data$key, values_from = .data$value)
 
   if (begrenset) {
     d <- d %>%
-      tidyr::spread(.data$mkey, .data$mvalue)
+      tidyr::pivot_wider(names_from = .data$mkey, values_from = .data$mvalue)
   }
 
   d <- d %>%
@@ -87,11 +87,11 @@ parse_trafikkindeks_siste_12_maaneder <- function(d, total) {
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Basisaar, .data$Indeksaar, .data$Maaned,
                   everything()) %>%
-    tidyr::spread(.data$key, .data$value)
+    tidyr::pivot_wider(names_from = .data$key, values_from = .data$value)
 
   if (begrenset) {
     d <- d %>%
-      tidyr::spread(.data$mkey, .data$mvalue)
+      tidyr::pivot_wider(names_from = .data$mkey, values_from = .data$mvalue)
   }
 
   d <- d %>%

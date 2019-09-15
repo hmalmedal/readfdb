@@ -13,7 +13,7 @@ parse_csv_page <- function(csv_page) {
   names(d)[1] <- "index"
 
   d <- d %>%
-    tidyr::gather("key", "value", -1, factor_key = TRUE) %>%
+    tidyr::pivot_longer(-1, names_to = "key", values_to = "value") %>%
     dplyr::mutate(value = stringr::str_remove_all(.data$value, ",") %>%
                     as.numeric()) %>%
     dplyr::mutate(index_name, !!!meta)
@@ -50,7 +50,7 @@ parse_trafikkverdier <- function(d) {
                     stringr::str_remove_all(" \\d{4}")) %>%
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, everything()) %>%
-    tidyr::spread(.data$index, .data$value)
+    tidyr::pivot_wider(names_from = .data$index, values_from = .data$value)
 
   d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
@@ -77,7 +77,7 @@ parse_produksjon <- function(d, total) {
                   Dato = lubridate::make_date(.data$Aar, .data$Maaned)) %>%
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, .data$Maaned, everything()) %>%
-    tidyr::spread(.data$key, .data$value)
+    tidyr::pivot_wider(names_from = .data$key, values_from = .data$value)
 
   d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
@@ -106,7 +106,7 @@ parse_sonefordeling <- function(d, total) {
                     stringr::str_remove_all(" \\d{4}")) %>%
     dplyr::select(-.data$index_name, -matches("^meta|^(sub)?type$")) %>%
     dplyr::select(.data$Aar, everything()) %>%
-    tidyr::spread(.data$key, .data$value)
+    tidyr::pivot_wider(names_from = .data$key, values_from = .data$value)
 
   d <- d %>%
     dplyr::rename("\u00c5r" = .data$Aar,
